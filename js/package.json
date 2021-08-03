@@ -1,0 +1,28 @@
+{
+  "name": "codec-fixtures",
+  "version": "1.0.0",
+  "description": "Standard IPLD codec spec fixtures",
+  "main": "codec-fixtures.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "node make-fixtures.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ipld/codec-fixtures.git"
+  },
+  "author": "Rod <rod@vagg.org> (http://r.va.gg/)",
+  "license": "(Apache-2.0 AND MIT)",
+  "bugs": {
+    "url": "https://github.com/ipld/codec-fixtures/issues"
+  },
+  "homepage": "https://github.com/ipld/codec-fixtures#readme",
+  "dependencies": {
+    "@ipld/dag-cbor": "^6.0.6",
+    "@ipld/dag-json": "^7.0.5",
+    "@ipld/dag-pb": "^2.1.5",
+    "ipld-garbage": "^4.0.3",
+    "multiformats": "^9.4.3"
+  }
+}
