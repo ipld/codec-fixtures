@@ -1,18 +1,10 @@
 import fs from 'fs/promises'
 import path from 'path'
 
-import * as dagCBOR from '@ipld/dag-cbor'
-import * as dagJSON from '@ipld/dag-json'
-import * as dagPB from '@ipld/dag-pb'
 import { sha256 } from 'multiformats/hashes/sha2'
 import * as Block from 'multiformats/block'
 import { garbage } from 'ipld-garbage'
-
-const codecs = {
-  [dagCBOR.name]: { codec: dagCBOR, complete: true },
-  [dagJSON.name]: { codec: dagJSON, complete: true },
-  [dagPB.name]: { codec: dagPB, complete: false }
-}
+import { codecs } from './codecs.js'
 
 const fixturesDir = new URL('../fixtures/', import.meta.url)
 const fixturesSrcDir = new URL('../_fixtures_src/', import.meta.url)
@@ -20,7 +12,7 @@ const fixturesSrcDir = new URL('../_fixtures_src/', import.meta.url)
 async function makeGarbage () {
   for (let i = 0; i < 25;) {
     const value = garbage(5000)
-    const block = await Block.encode({ value, codec: dagCBOR, hasher: sha256 })
+    const block = await Block.encode({ value, codec: codecs['dag-cbor'].codec, hasher: sha256 })
     if (block.bytes.length < 1000) {
       continue
     }
