@@ -15,12 +15,7 @@ func TestCodecs(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	i := 0
 	for _, dir := range dirs {
-		i++
-		if i < 0 {
-			continue
-		}
 		fixtureName := dir.Name()
 		if !dir.IsDir() {
 			t.Fatalf("%v is not a directory", fixtureName)
