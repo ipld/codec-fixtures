@@ -29,10 +29,12 @@ func TestCodecs(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			verifyCid(t, "decode(dag-json)->encode(dag-json)", data.dagjson.value, dagJsonLp, data.dagjson.cid)
-			verifyCid(t, "decode(dag-json)->encode(dag-cbor)", data.dagjson.value, dagCborLp, data.dagcbor.cid)
-			verifyCid(t, "decode(dag-cbor)->encode(dag-json)", data.dagcbor.value, dagJsonLp, data.dagjson.cid)
-			verifyCid(t, "decode(dag-cbor)->encode(dag-cbor)", data.dagcbor.value, dagCborLp, data.dagcbor.cid)
+			for fromCodec := range data {
+				for toCodec := range data {
+					msg := fmt.Sprintf("decode(%v)->encode(%v)", fromCodec, toCodec)
+					verifyCid(t, msg, data[fromCodec].value, codecs[toCodec], data[toCodec].cid)
+				}
+			}
 		})
 	}
 }
