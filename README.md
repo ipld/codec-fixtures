@@ -1,5 +1,7 @@
 # IPLD Codec Fixtures
 
+[![Test against latest libraries](https://github.com/ipld/codec-fixtures/actions/workflows/cron.yml/badge.svg)](https://github.com/ipld/codec-fixtures/actions/workflows/cron.yml)
+
 This repository contains fixtures for standard IPLD codecs. It is used to verify the correctness, compatibility and limitations of IPLD implementations.
 
 ## What?
