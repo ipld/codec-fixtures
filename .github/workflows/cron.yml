@@ -9,11 +9,12 @@ name: Test against latest libraries
 jobs:
   node:
     name: Node.js
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         node-version: [12.x, 14.x, 16.x, lts/*]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: js
