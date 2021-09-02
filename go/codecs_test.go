@@ -12,7 +12,7 @@ import (
 func TestCodecs(t *testing.T) {
 	dirs, err := ioutil.ReadDir("../fixtures/")
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("failed to open fixtures dir: %v", err)
 	}
 
 	for _, dir := range dirs {
@@ -27,7 +27,7 @@ func TestCodecs(t *testing.T) {
 		t.Run(fixtureName, func(t *testing.T) {
 			data, err := loadFixture(fixtureName)
 			if err != nil {
-				t.Fatal(err)
+				t.Fatalf("failed to load fixture: %v", err)
 			}
 			for fromCodec := range data {
 				for toCodec := range data {
@@ -42,7 +42,7 @@ func TestCodecs(t *testing.T) {
 func verifyCid(t *testing.T, desc string, node ipld.Node, toEnc ipld.LinkPrototype, expected cid.Cid) {
 	actual, err := nodeToCid(toEnc, node)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("failed to convert node to CID: %v", err)
 	}
 	if !expected.Equals(actual) {
 		t.Fatalf("[%v] generated CID (%v) does not match expected (%v)", desc, expected.String(), actual.String())
