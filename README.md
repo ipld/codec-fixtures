@@ -65,6 +65,12 @@ Or, in the [go](./go/) directory, run:
 go test
 ```
 
+## Generating testmark output for ipld.io
+
+Each codec tested here has a corresponding file in the https://github.com/ipld/ipld repository which generates the https://ipld.io website containing the fixture data in [testmark](https://github.com/warpfork/go-testmark) format. The filename per codec is is `specs/codecs/<CODEC>/fixtures/cross-codec/index.md`.
+
+The [js/make-testmark.js](js/make-testmark.js) program can be used to update those files when the data is updated here. Run it with `node js/make-testmark.js <path/to/ipld/ipld/repository>`.
+
 ## License
 
 Licensed under either of

@@ -1,24 +1,17 @@
 /* eslint-env mocha */
 
-import fs from 'fs'
-import path from 'path'
 import chai from 'chai'
 import { sha256 } from 'multiformats/hashes/sha2'
 import * as Block from 'multiformats/block'
 import { codecs } from './codecs.js'
+import { fixtureDirectories, loadFixture } from './util.js'
 
 const { assert } = chai
-const fixturesDir = new URL('../fixtures/', import.meta.url)
 
 describe('Codec fixtures', () => {
-  for (const dir of fs.readdirSync(fixturesDir)) {
-    const dirUrl = new URL(`./${dir}/`, fixturesDir)
-    const stat = fs.statSync(dirUrl)
-    if (!stat.isDirectory()) {
-      continue
-    }
-    it(dir, async () => {
-      const data = await loadFixture(dirUrl)
+  for (const { name, url } of fixtureDirectories()) {
+    it(name, async () => {
+      const data = await loadFixture(url)
       for (const [fromCodec, { bytes }] of Object.entries(data)) {
         const value = codecs[fromCodec].codec.decode(bytes)
         for (const [toCodec, { cid }] of Object.entries(data)) {
@@ -29,14 +22,3 @@ describe('Codec fixtures', () => {
     })
   }
 })
-
-async function loadFixture (dir) {
-  const data = {}
-  for (const file of await fs.promises.readdir(dir)) {
-    const ext = path.extname(file).slice(1)
-    const cid = file.substring(0, file.length - ext.length - 1)
-    const bytes = await fs.promises.readFile(new URL(file, dir))
-    data[ext] = { cid, bytes }
-  }
-  return data
-}
