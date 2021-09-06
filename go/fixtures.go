@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	_ "github.com/alexjg/go-dag-jose/dagjose"
 	"github.com/ipfs/go-cid"
 	_ "github.com/ipld/go-codec-dagpb"
 	"github.com/ipld/go-ipld-prime"
@@ -44,10 +45,17 @@ var dagJsonLp = cidlink.LinkPrototype{Prefix: cid.Prefix{
 	MhType:   0x12,   // "sha2-256"
 	MhLength: 32,
 }}
+var dagJoseLp = cidlink.LinkPrototype{Prefix: cid.Prefix{
+	Version:  1,
+	Codec:    0x85, // "dag-jose"
+	MhType:   0x12, // "sha2-256"
+	MhLength: 32,
+}}
 var codecs = map[codecName]ipld.LinkPrototype{
 	"dag-pb":   dagPbLp,
 	"dag-cbor": dagCborLp,
 	"dag-json": dagJsonLp,
+	"dag-jose": dagJoseLp,
 }
 var linkSystem = cidlink.DefaultLinkSystem()
 

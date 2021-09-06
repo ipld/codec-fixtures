@@ -24,6 +24,7 @@
     "@ipld/dag-json": "^8.0.0",
     "@ipld/dag-pb": "^2.1.5",
     "chai": "^4.3.4",
+    "dag-jose": "^1.0.0",
     "ipld-garbage": "^4.0.3",
     "mocha": "^9.0.3",
     "multiformats": "^9.4.3"
