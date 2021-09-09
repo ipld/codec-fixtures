@@ -18,7 +18,7 @@ func TestCodecs(t *testing.T) {
 	for _, dir := range dirs {
 		fixtureName := dir.Name()
 		if !dir.IsDir() {
-			t.Fatalf("%v is not a directory", fixtureName)
+			continue
 		}
 		if reason, blacklisted := FixtureBlacklist[fixtureName]; blacklisted {
 			fmt.Printf("Skipping fixture '%v': %v\n", fixtureName, reason)

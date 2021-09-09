@@ -16,11 +16,11 @@ export async function loadFixture (dir) {
 
 export function * fixtureDirectories () {
   for (const name of fs.readdirSync(fixturesDir)) {
-    const url = new URL(`./${name}/`, fixturesDir)
-    const stat = fs.statSync(url)
+    const stat = fs.statSync(new URL(`./${name}`, fixturesDir))
     if (!stat.isDirectory()) {
       continue
     }
+    const url = new URL(`./${name}/`, fixturesDir)
     yield { name, url }
   }
 }
