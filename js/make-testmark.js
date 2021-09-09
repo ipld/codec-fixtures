@@ -29,7 +29,18 @@ async function makeTestmark () {
       process.exit(1)
     }
     const fixtureFile = new URL('index.md', dir)
-    let tmDoc = parse(`# Cross-codec fixtures for ${codec}\n`)
+    let tmDoc = parse(`---
+templateEngineOverride: md
+---
+
+# Cross-codec fixtures for ${codec}
+
+## Introduction
+
+_TODO_
+
+## Fixtures
+`)
     try {
       stat = await fs.promises.stat(fixtureFile)
       if (!stat.isFile()) {
@@ -44,22 +55,22 @@ async function makeTestmark () {
     const patchHunks = []
     for (let [name, fixture] of fixtures) {
       if (fixture[codec]) {
-        name = name.replace(/\s/g, '__')
-        if (tmDoc.hunksByName.has(name)) { // patch it
+        name = name.replace(/[\s/]/g, '__')
+        if (tmDoc.hunksByName.has(`${name}/${codec}/bytes`)) { // patch it
           patchHunks.push({
-            name,
+            name: `${name}/${codec}/bytes`,
             blockTag: '',
-            body: fixture[codec].bytes.toString('hex')
+            body: fixture[codec].bytes.toString('hex').replace(/(.{120})/g, '$1\n')
           })
           patchHunks.push({
-            name: `${name}-cid-${codec}`,
+            name: `${name}/${codec}/cid`,
             blockTag: '',
             body: fixture[codec].cid
           })
           if (codec === 'dag-json') {
             // special case for dag-json since a human should be able to read it
             patchHunks.push({
-              name: `${name}-string-form`,
+              name: `${name}/${codec}/string`,
               blockTag: 'json',
               body: new TextDecoder().decode(fixture[codec].bytes)
             })
@@ -69,34 +80,37 @@ async function makeTestmark () {
               continue
             }
             patchHunks.push({
-              name: `${name}-cid-${altCodec}`,
+              name: `${name}/${altCodec}/cid`,
               blockTag: '',
               body: fixture[altCodec].cid
             })
           }
         } else { // create it
-          let section = `## ${name}
+          let section = `### ${name}
 
-### Bytes
-[testmark]:# (${name})
+**Bytes**
+
+[testmark]:# (${name}/${codec}/bytes)
 \`\`\`
-${fixture[codec].bytes.toString('hex')}
+${fixture[codec].bytes.toString('hex').replace(/(.{120})/g, '$1\n')}
 \`\`\`
 `
           if (codec === 'dag-json') {
             // special case for dag-json since a human should be able to read it
             section += `
-### String form
-[testmark]:# (${name}-string-form)
-\`\`\`
+**String form**
+
+[testmark]:# (${name}/${codec}/string)
+\`\`\`json
 ${new TextDecoder().decode(fixture[codec].bytes)}
 \`\`\`
 `
           }
 
           section += `
-### ${codec} CID
-[testmark]:# (${name}-cid-${codec})
+**${codec} CID**
+
+[testmark]:# (${name}/${codec}/cid)
 \`\`\`
 ${fixture[codec].cid}
 \`\`\`
@@ -106,8 +120,9 @@ ${fixture[codec].cid}
               continue
             }
             section += `
-### ${altCodec} CID
-[testmark]:# (${name}-cid-${altCodec})
+**${altCodec} CID**
+
+[testmark]:# (${name}/${altCodec}/cid)
 \`\`\`
 ${fixture[altCodec].cid}
 \`\`\`
