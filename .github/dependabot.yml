@@ -21,3 +21,10 @@ updates:
     commit-message:
       prefix: 'chore'
       include: 'scope'
+  - package-ecosystem: 'cargo'
+    directory: '/rust'
+    schedule:
+      interval: 'daily'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'

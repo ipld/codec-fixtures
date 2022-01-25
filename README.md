@@ -38,6 +38,13 @@ Fixtures are tested against the [js-multiformats](https://github.com/multiformat
 * DAG-CBOR: [@ipld/dag-cbor](https://github.com/ipld/js-dag-cbor)
 * DAG-JSON: [@ipld/dag-json](https://github.com/ipld/js-dag-cbor)
 
+### Rust
+
+Fixtures are tested against the [libipld](https://github.com/ipld/libipld) stack:
+
+* DAG-CBOR: [libipld-cbor](https://crates.io/crates/libipld-cbor)
+* DAG-JSON: [libipld-json](https://crates.io/crates/libipld-json)
+
 ## Running tests
 
 ### JavaScript
@@ -63,6 +70,18 @@ Or, in the [go](./go/) directory, run:
 
 ```
 go test
+```
+
+## Rust
+
+```
+make testrust
+```
+
+Or in the [rust](./rust/) directory, run:
+
+```
+cargo test -- --nocapture
 ```
 
 ## Generating testmark output for ipld.io
