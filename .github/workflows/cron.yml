@@ -60,3 +60,29 @@ jobs:
           cat go.mod
       - name: Run tests
         run: go test -v ./...
+  rust:
+    name: rust
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust-version:
+          - stable
+          - nightly
+    defaults:
+      run:
+        working-directory: rust
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Rust ${{ matrix.rust-version }}
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust-version }}
+          override: true
+      - name: Rust information
+        run: |
+          cargo --version
+          cargo tree
+      - name: Run tests
+        run: cargo test -- --nocapture
