@@ -80,6 +80,10 @@ jobs:
           profile: minimal
           toolchain: ${{ matrix.rust-version }}
           override: true
+      - name: Install latest version of dependencies
+        run: |
+          cargo install cargo-edit
+          cargo add https://github.com/ipld/libipld
       - name: Rust information
         run: |
           cargo --version
