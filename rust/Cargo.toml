@@ -4,4 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-libipld = "0.13.0"
+libipld = { version = "0.13.0", features = ["serde-codec"] }
+serde_ipld_dagcbor = "0.2.0"

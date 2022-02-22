@@ -83,7 +83,8 @@ jobs:
       - name: Install latest version of dependencies
         run: |
           # Switch from the released version to master branch
-          sed -i 's/^libipld.*/libipld = { git = "https:\/\/github.com\/ipld\/libipld" }/' Cargo.toml
+          sed -i 's/^\(libipld = { \)version = ".*",\(.*\)/\1git = "https:\/\/github.com\/ipld\/libipld",\2/' Cargo.toml
+          sed -i 's/^serde_ipld_dagcbor.*/serde_ipld_dagcbor = { git = "https:\/\/github.com\/ipld\/serde_ipld_dagcbor" }/' Cargo.toml
       - name: Rust information
         run: |
           cargo --version
