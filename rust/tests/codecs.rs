@@ -3,7 +3,10 @@ use std::fs::{self, DirEntry};
 use std::path::PathBuf;
 
 use libipld::{
-    block::Block, cid::Cid, codec::Codec, ipld::Ipld, multihash::Code, store::DefaultParams,
+    cid::Cid,
+    codec::Codec,
+    ipld::Ipld,
+    multihash::{Code, MultihashDigest},
     IpldCodec,
 };
 
@@ -158,18 +161,14 @@ fn codec_fixtures() {
 
             // …transcode it into any other fixture.
             for to_fixture in &fixtures {
-                let block = Block::<DefaultParams>::encode(
-                    Codecs::get(&to_fixture.codec),
-                    Code::Sha2_256,
-                    &decoded,
-                )
-                .expect("Encoding must work");
+                let codec = Codecs::get(&to_fixture.codec);
+                let data = codec.encode(&decoded).expect("Encoding must work");
+                let digest = Code::Sha2_256.digest(&data);
+                let cid = Cid::new_v1(codec.into(), digest);
                 assert_eq!(
-                    block.cid(),
-                    &to_fixture.cid,
+                    cid, to_fixture.cid,
                     "CIDs match for the data decoded from {} encoded as {}",
-                    from_fixture.codec,
-                    to_fixture.codec
+                    from_fixture.codec, to_fixture.codec
                 );
             }
         }
