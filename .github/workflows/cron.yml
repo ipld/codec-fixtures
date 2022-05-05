@@ -69,6 +69,9 @@ jobs:
         rust-version:
           - stable
           - nightly
+        manifest:
+          - Cargo.toml
+          - Cargo_latest_git.toml
     defaults:
       run:
         working-directory: rust
@@ -80,14 +83,13 @@ jobs:
           profile: minimal
           toolchain: ${{ matrix.rust-version }}
           override: true
-      - name: Install latest version of dependencies
-        run: |
-          # Switch from the released version to master branch
-          sed -i 's/^\(libipld = { \)version = ".*",\(.*\)/\1git = "https:\/\/github.com\/ipld\/libipld",\2/' Cargo.toml
-          sed -i 's/^serde_ipld_dagcbor.*/serde_ipld_dagcbor = { git = "https:\/\/github.com\/ipld\/serde_ipld_dagcbor" }/' Cargo.toml
-      - name: Rust information
+      # The manifest file needs to be named `Cargo.toml`, hence rename if needed.
+      - name: Use specified manifest file ${{ matrix.manifest }}
+        if: matrix.manifest != 'Cargo.toml'
+        run: mv ${{ matrix.manifest }} Cargo.toml
+      - name: Rust information with ${{ matrix.manifest }}
         run: |
           cargo --version
           cargo tree
-      - name: Run tests
+      - name: Run tests with ${{ matrix.manifest }}
         run: cargo test -- --nocapture
