@@ -3,7 +3,7 @@ package codec_fixtures
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -52,7 +52,7 @@ var codecs = map[codecName]ipld.LinkPrototype{
 var linkSystem = cidlink.DefaultLinkSystem()
 
 func loadFixture(dir string) (fixtureSet, error) {
-	files, err := ioutil.ReadDir("../fixtures/" + dir)
+	files, err := os.ReadDir("../fixtures/" + dir)
 	fixtures := make(fixtureSet)
 	if err != nil {
 		return fixtures, err
@@ -67,7 +67,7 @@ func loadFixture(dir string) (fixtureSet, error) {
 		if err != nil {
 			return fixtures, err
 		}
-		byts, err := ioutil.ReadFile("../fixtures/" + dir + "/" + file.Name())
+		byts, err := os.ReadFile("../fixtures/" + dir + "/" + file.Name())
 		if err != nil {
 			return fixtures, err
 		}

@@ -2,7 +2,7 @@ package codec_fixtures
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/ipfs/go-cid"
@@ -10,7 +10,7 @@ import (
 )
 
 func TestCodecs(t *testing.T) {
-	dirs, err := ioutil.ReadDir("../fixtures/")
+	dirs, err := os.ReadDir("../fixtures/")
 	if err != nil {
 		t.Fatalf("failed to open fixtures dir: %v", err)
 	}
