@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/ipfs/go-cid v0.3.0
-	github.com/ipld/go-codec-dagpb v1.4.2
+	github.com/ipld/go-codec-dagpb v1.5.0
 	github.com/ipld/go-ipld-prime v0.18.0
 )
 
