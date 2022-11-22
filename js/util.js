@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 export const fixturesDir = new URL('../fixtures/', import.meta.url)
+export const keccak256FixturesDir = new URL('../keccak256_fixtures/', import.meta.url)
 
 export async function loadFixture (dir) {
   const data = {}
@@ -21,6 +22,17 @@ export function * fixtureDirectories () {
       continue
     }
     const url = new URL(`./${name}/`, fixturesDir)
+    yield { name, url }
+  }
+}
+
+export function * keccak256FixtureDirectories () {
+  for (const name of fs.readdirSync(keccak256FixturesDir)) {
+    const stat = fs.statSync(new URL(`./${name}`, keccak256FixturesDir))
+    if (!stat.isDirectory()) {
+      continue
+    }
+    const url = new URL(`./${name}/`, keccak256FixturesDir)
     yield { name, url }
   }
 }
