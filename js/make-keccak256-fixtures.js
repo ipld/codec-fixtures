@@ -49,14 +49,7 @@ async function makeFixtures () {
     }))
 }
 
-if (process.argv.includes('--garbage')) {
-    makeGarbage().catch((err) => {
-        console.error(err)
-        process.exit(1)
-    })
-} else {
-    makeFixtures().catch((err) => {
-        console.error(err)
-        process.exit(1)
-    })
-}
+makeFixtures().catch((err) => {
+    console.error(err)
+    process.exit(1)
+})
