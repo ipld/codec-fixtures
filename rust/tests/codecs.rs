@@ -10,22 +10,8 @@ use libipld::{
     IpldCodec,
 };
 
-static FIXTURE_SKIPLIST: [(&str, &str); 5] = [
-    ("int--11959030306112471732", "integer out of int64 range"),
-    (
-        "dagpb_11unnamedlinks+data",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    ("dagpb_2link+data", "DAG-PB isn't fully compatible yet"),
-    (
-        "dagpb_4namedlinks+data",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    (
-        "dagpb_7unnamedlinks+data",
-        "DAG-PB isn't fully compatible yet",
-    ),
-];
+static FIXTURE_SKIPLIST: [(&str, &str); 1] =
+    [("int--11959030306112471732", "integer out of int64 range")];
 
 /// Contents of a single fixture.
 #[derive(Debug)]
