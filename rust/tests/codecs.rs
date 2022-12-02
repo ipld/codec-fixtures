@@ -10,13 +10,12 @@ use libipld::{
     IpldCodec,
 };
 
-static FIXTURE_SKIPLIST: [(&str, &str); 16] = [
+static FIXTURE_SKIPLIST: [(&str, &str); 5] = [
     ("int--11959030306112471732", "integer out of int64 range"),
     (
         "dagpb_11unnamedlinks+data",
         "DAG-PB isn't fully compatible yet",
     ),
-    ("dagpb_1link", "DAG-PB isn't fully compatible yet"),
     ("dagpb_2link+data", "DAG-PB isn't fully compatible yet"),
     (
         "dagpb_4namedlinks+data",
@@ -26,28 +25,6 @@ static FIXTURE_SKIPLIST: [(&str, &str); 16] = [
         "dagpb_7unnamedlinks+data",
         "DAG-PB isn't fully compatible yet",
     ),
-    ("dagpb_Data_zero", "DAG-PB isn't fully compatible yet"),
-    ("dagpb_empty", "DAG-PB isn't fully compatible yet"),
-    ("dagpb_Links_Hash_some", "DAG-PB isn't fully compatible yet"),
-    (
-        "dagpb_Links_Hash_some_Name_some",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    (
-        "dagpb_Links_Hash_some_Name_zero",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    (
-        "dagpb_Links_Hash_some_Tsize_some",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    (
-        "dagpb_Links_Hash_some_Tsize_zero",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    ("dagpb_simple_forms_2", "DAG-PB isn't fully compatible yet"),
-    ("dagpb_simple_forms_3", "DAG-PB isn't fully compatible yet"),
-    ("dagpb_simple_forms_4", "DAG-PB isn't fully compatible yet"),
 ];
 
 /// Contents of a single fixture.
@@ -149,7 +126,7 @@ fn codec_fixtures() {
             .expect("Directory must have a name")
             .to_os_string()
             .to_str()
-            .expect("Filenome must be valid UTF-8")
+            .expect("Filename must be valid UTF-8")
             .to_string();
         println!("Testing fixture {}", fixture_name);
         let fixtures = load_fixture(dir);
