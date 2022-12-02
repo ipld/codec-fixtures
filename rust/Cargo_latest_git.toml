@@ -3,6 +3,7 @@ name = "codec-fixtures"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
+[dev-dependencies]
+hex = "0.4.3"
 libipld = { git = "https://github.com/ipld/libipld", features = ["serde-codec"] }
 serde_ipld_dagcbor = { git = "https://github.com/ipld/serde_ipld_dagcbor" }

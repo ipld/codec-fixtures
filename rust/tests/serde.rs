@@ -1,6 +1,4 @@
-use std::env;
-use std::fs::{self, DirEntry};
-use std::path::PathBuf;
+mod utils;
 
 use libipld::{
     cid::Cid,
@@ -10,62 +8,15 @@ use libipld::{
     IpldCodec,
 };
 
-static FIXTURE_SKIPLIST: [(&str, &str); 16] = [
-    ("int--11959030306112471732", "integer out of int64 range"),
-    (
-        "dagpb_11unnamedlinks+data",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    ("dagpb_1link", "DAG-PB isn't fully compatible yet"),
-    ("dagpb_2link+data", "DAG-PB isn't fully compatible yet"),
-    (
-        "dagpb_4namedlinks+data",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    (
-        "dagpb_7unnamedlinks+data",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    ("dagpb_Data_zero", "DAG-PB isn't fully compatible yet"),
-    ("dagpb_empty", "DAG-PB isn't fully compatible yet"),
-    ("dagpb_Links_Hash_some", "DAG-PB isn't fully compatible yet"),
-    (
-        "dagpb_Links_Hash_some_Name_some",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    (
-        "dagpb_Links_Hash_some_Name_zero",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    (
-        "dagpb_Links_Hash_some_Tsize_some",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    (
-        "dagpb_Links_Hash_some_Tsize_zero",
-        "DAG-PB isn't fully compatible yet",
-    ),
-    ("dagpb_simple_forms_2", "DAG-PB isn't fully compatible yet"),
-    ("dagpb_simple_forms_3", "DAG-PB isn't fully compatible yet"),
-    ("dagpb_simple_forms_4", "DAG-PB isn't fully compatible yet"),
-];
-
-/// Contents of a single fixture.
-#[derive(Debug)]
-struct Fixture {
-    codec: String,
-    cid: Cid,
-    bytes: Vec<u8>,
-}
-
 /// Mapping between string identifiers and actual codecs.
 struct Codecs;
 
+// Currently the only codec that is implemented based on Serde is DAG-CBOR. Until others have been
+// implemented, use the non-Serde based ones.
 impl Codecs {
     /// Map codec strings to actual codecs.
     fn get(codec: &str) -> IpldCodec {
         match codec {
-            "dag-cbor" => IpldCodec::DagCbor,
             "dag-json" => IpldCodec::DagJson,
             "dag-pb" => IpldCodec::DagPb,
             _ => panic!("Unknown codec"),
@@ -73,73 +24,10 @@ impl Codecs {
     }
 }
 
-/// Returns all fixtures from a directory.
-fn load_fixture(dir: DirEntry) -> Vec<Fixture> {
-    fs::read_dir(&dir.path())
-        .unwrap()
-        .filter_map(|file| {
-            // Filter out invalid files.
-            let file = file.ok()?;
-
-            let path = file.path();
-            let extension = path
-                .extension()
-                .expect("Filename must have an extension")
-                .to_os_string()
-                .into_string()
-                .expect("Extension must be valid UTF-8");
-            let cid = path
-                .file_stem()
-                .expect("Filename must have a name")
-                .to_os_string()
-                .into_string()
-                .expect("Filename must be valid UTF-8");
-            let bytes = fs::read(&path).expect("File must be able to be read");
-
-            Some(Fixture {
-                codec: extension,
-                cid: Cid::try_from(cid.clone()).expect("Filename must be a valid Cid"),
-                bytes,
-            })
-        })
-        .collect()
-}
-
-/// Returns the paths to all directories that contain fixtures.
-fn fixture_directories() -> Vec<DirEntry> {
-    let rust_dir = env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR must be set");
-    let mut fixtures_dir = PathBuf::from(rust_dir);
-    fixtures_dir.push("../fixtures");
-
-    // Only take directories, exclude files
-    fs::read_dir(&fixtures_dir)
-        .expect("Cannot open fixtures directory")
-        .filter_map(Result::ok)
-        .filter(|dir| dir.path().is_dir())
-        .collect()
-}
-
-/// Returns true if a test fixture is on the skip list
-fn skip_test(dir: &DirEntry) -> bool {
-    for (name, reason) in FIXTURE_SKIPLIST {
-        if dir
-            .path()
-            .into_os_string()
-            .to_str()
-            .unwrap()
-            .ends_with(name)
-        {
-            eprintln!("Skipping fixture '{}': {}", name, reason);
-            return true;
-        }
-    }
-    false
-}
-
 #[test]
 fn codec_fixtures() {
-    for dir in fixture_directories() {
-        if skip_test(&dir) {
+    for dir in utils::fixture_directories("fixtures") {
+        if utils::skip_test(&dir) {
             continue;
         }
 
@@ -149,10 +37,10 @@ fn codec_fixtures() {
             .expect("Directory must have a name")
             .to_os_string()
             .to_str()
-            .expect("Filenome must be valid UTF-8")
+            .expect("Filename must be valid UTF-8")
             .to_string();
         println!("Testing fixture {}", fixture_name);
-        let fixtures = load_fixture(dir);
+        let fixtures = utils::load_fixtures(dir);
         for from_fixture in &fixtures {
             // Take a fixture of one codec and…
             let decoded: Ipld = match &from_fixture.codec[..] {
@@ -166,18 +54,73 @@ fn codec_fixtures() {
 
             // …transcode it into any other fixture.
             for to_fixture in &fixtures {
-                let codec = Codecs::get(&to_fixture.codec);
-                let data = match &to_fixture.codec[..] {
-                    "dag-cbor" => serde_ipld_dagcbor::to_vec(&decoded).expect("Encoding must work"),
-                    _ => codec.encode(&decoded).expect("Encoding must work"),
+                let (codec_code, data) = match &to_fixture.codec[..] {
+                    "dag-cbor" => (
+                        0x71,
+                        serde_ipld_dagcbor::to_vec(&decoded).expect("Encoding must work"),
+                    ),
+                    _ => {
+                        let codec = Codecs::get(&to_fixture.codec);
+                        (
+                            codec.into(),
+                            codec.encode(&decoded).expect("Encoding must work"),
+                        )
+                    }
                 };
                 let digest = Code::Sha2_256.digest(&data);
-                let cid = Cid::new_v1(codec.into(), digest);
+                let cid = Cid::new_v1(codec_code, digest);
                 assert_eq!(
                     cid, to_fixture.cid,
                     "CIDs match for the data decoded from {} encoded as {}",
                     from_fixture.codec, to_fixture.codec
                 );
+            }
+        }
+    }
+}
+
+#[test]
+fn negative_fixtures() {
+    for codec_dir in utils::fixture_directories("negative-fixtures") {
+        let codec_name = codec_dir
+            .file_name()
+            .to_str()
+            .expect("Codec names are valid UTF-8")
+            .to_string();
+
+        let encode_fixtures = utils::load_negative_fixtures(codec_dir.path(), "encode");
+        for fixture in encode_fixtures {
+            println!(
+                "Testing negative encode fixture for {}: {}",
+                codec_name, fixture.name
+            );
+            let error = match &codec_name[..] {
+                "dag-cbor" => serde_ipld_dagcbor::to_vec(&fixture.dag_json.unwrap()).is_err(),
+                _ => Codecs::get(&codec_name)
+                    .encode(&fixture.dag_json.unwrap())
+                    .is_err(),
+            };
+            if !error {
+                assert!(false, "Did not error")
+            }
+        }
+
+        let decode_fixtures = utils::load_negative_fixtures(codec_dir.path(), "decode");
+        for fixture in decode_fixtures {
+            println!(
+                "Testing negative decode fixture for {}: {}",
+                codec_name, fixture.name
+            );
+            let error = match &codec_name[..] {
+                "dag-cbor" => {
+                    serde_ipld_dagcbor::from_slice::<Ipld>(&fixture.hex.unwrap()).is_err()
+                }
+                _ => Codecs::get(&codec_name)
+                    .decode::<Ipld>(&fixture.hex.unwrap())
+                    .is_err(),
+            };
+            if !error {
+                assert!(false, "Did not error")
             }
         }
     }
