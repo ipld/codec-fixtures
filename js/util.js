@@ -44,16 +44,17 @@ export function * negativeFixtureCodecs () {
   }
 }
 
-export function * negativeFixturesEncode (codec) {
-  for (const { name, url } of iterate('file', negativeFixturesDir, codec, 'encode')) {
+export function * negativeFixtures (type, codec) {
+  for (const { name, url } of iterate('file', negativeFixturesDir, codec, type)) {
     const fixtureText = fs.readFileSync(url, 'utf8')
     yield JSON.parse(fixtureText)
   }
 }
 
+export function * negativeFixturesEncode (codec) {
+  yield * negativeFixtures('encode', codec)
+}
+
 export function * negativeFixturesDecode (codec) {
-  for (const { name, url } of iterate('file', negativeFixturesDir, codec, 'decode')) {
-    const fixtureText = fs.readFileSync(url, 'utf8')
-    yield JSON.parse(fixtureText)
-  }
+  yield * negativeFixtures('decode', codec)
 }

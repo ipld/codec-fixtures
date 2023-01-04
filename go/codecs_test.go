@@ -2,14 +2,17 @@ package codec_fixtures
 
 import (
 	"bytes"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/ipfs/go-cid"
 	"github.com/ipld/go-ipld-prime"
+	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
 	"github.com/ipld/go-ipld-prime/multicodec"
 	basicnode "github.com/ipld/go-ipld-prime/node/basic"
 )
@@ -93,6 +96,35 @@ func TestNegatigeFixtures(t *testing.T) {
 					}
 				}
 			})
+
+			t.Run("decode", func(t *testing.T) {
+				files, err := os.ReadDir(filepath.Join("../negative-fixtures/", codecName, "decode"))
+				if err != nil {
+					t.Fatalf("failed to open negative fixtures dir: %v", err)
+				}
+				for _, file := range files {
+					if file.IsDir() {
+						continue
+					}
+					fixtureData, err := os.ReadFile(filepath.Join("../negative-fixtures/", codecName, "decode", file.Name()))
+					if err != nil {
+						t.Fatalf("failed to read fixture data: %v", err)
+					}
+					var fixtures []negativeFixtureDecode
+					err = json.Unmarshal(fixtureData, &fixtures)
+					if err != nil {
+						t.Fatalf("failed to decode fixture data: %v", err)
+					}
+					for _, fixture := range fixtures {
+						fixtureName := fmt.Sprintf("%s/decode/%s", codecName, fixture.Name)
+						if reason, blacklisted := FixtureBlacklist[fixtureName]; blacklisted {
+							fmt.Printf("Skipping fixture '%v': %v\n", fixtureName, reason)
+							continue
+						}
+						t.Run(fixture.Name, testNegativeFixtureDecode(codecName, fixture))
+					}
+				}
+			})
 		})
 	}
 }
@@ -126,6 +158,33 @@ func testNegativeFixtureEncode(codecName string, fixture negativeFixtureEncode) 
 		if err == nil {
 			t.Errorf("should error on encode")
 		}
-		// TODO: test the error messages in some form? may require Go specific messages in fixture data
+		if !strings.EqualFold(err.Error(), fixture.Error) {
+			t.Logf("error mismatch: [%s] ~= [%s]", err.Error(), fixture.Error)
+		}
+	}
+}
+
+// create a test function an individual negative test fixture for decode
+func testNegativeFixtureDecode(codecName string, fixture negativeFixtureDecode) func(t *testing.T) {
+	return func(t *testing.T) {
+		byts, err := hex.DecodeString(fixture.Hex)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// look up decoder to test
+		decoder, err := multicodec.DefaultRegistry.LookupDecoder(codecs[codecName].(cidlink.LinkPrototype).Codec)
+		if err != nil {
+			t.Fatalf("could not choose a dag-pb encoder: %v", err)
+		}
+
+		// decode, should error
+		nb := basicnode.Prototype.Any.NewBuilder()
+		err = decoder(nb, bytes.NewReader(byts))
+		if err == nil {
+			t.Errorf("should error on encode")
+		} else if !strings.Contains(strings.ToLower(err.Error()), strings.ToLower(fixture.Error)) {
+			t.Errorf("error mismatch: [%s] ~= [%s]", err.Error(), fixture.Error)
+		}
 	}
 }

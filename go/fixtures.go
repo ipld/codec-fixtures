@@ -120,3 +120,9 @@ type negativeFixtureEncode struct {
 	DagJson interface{} `json:"dag-json,omitempty"`
 	Error   string      `json:"error"`
 }
+
+type negativeFixtureDecode struct {
+	Name  string `json:"name"`
+	Hex   string `json:"hex"`
+	Error string `json:"error"`
+}
