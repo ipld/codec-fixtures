@@ -22,14 +22,31 @@ The [_fixtures_src](./_fixtures_src/) directory contains the source of each of f
 
 Fixture generation uses the JavaScript stack for generating data, but this is not a requirement. If you would like to add fixtures and would like to create them manually, or add an alternative mechanism for generating fixtures from source then please do so.
 
+## Negative Fixtures
+
+Separately to the _positive_ fixtures, there is a [negative-fixtures](./negative-fixtures/) directory that contains failure conditions for codecs. These don't require a compile step, so are not included in the _fixtures_src directory but are edited directly.
+
+The structure for negative fixtures subdirectories is: `negative-fixtures/<codec name>/{encode,decode}/<fixtures>.json`. Where `<codec name>` is the canonical name of the codec being tested. `encode` and `decode` are fixtures that test the encode and decode paths of a codec, and `<fixture>` is an arbitrary name containing one or more fixture within the JSON structure.
+
+Test runners will load as manu fixture files as exist in these subdirectories and extract and run the cases defined there.
+
+### Encode
+
+Negative fixtures for an encode phase involve defining a data model form that should cause an error when passed through an `Encode()` for that codec. The data model form is instantiated by running the fixture data through an existing IPLD codec's decoder (mostly DAG-JSON data embedded within the JSON fixture document) and then attempting to pass that data model form into the codec and inspecting the error. Error messages may or may not be matched in some way, depending on the complexity of the implementation—it is more important that a failure occur than the error is exact.
+
+### Decode
+
+Negative fixtures for a decode phase involve loading a block's bytes from a hex form from the fixture data and passing those bytes through a `Decode()` for that codec and inspecting the error. Error messages may or may not be matched in some way, depending on the complexity of the implementation—it is more important that a failure occur than the error is exact.
+
 ## Implementations & Codecs
 
 ### Go
 
 Fixtures are tested against the [go-ipld-prime](https://github.com/ipld/go-ipld-prime) stack:
 
-* DAG-JSON: [go-ipld-prime/codec/dagjson](https://pkg.go.dev/github.com/ipld/go-ipld-prime/codec/dagjson)
-* DAG-CBOR: [go-ipld-prime/codec/dagcbor](https://pkg.go.dev/github.com/ipld/go-ipld-prime/codec/dagcbor)
+* DAG-JSON: [github.com/ipld/go-ipld-prime/codec/dagjson](https://pkg.go.dev/github.com/ipld/go-ipld-prime/codec/dagjson)
+* DAG-CBOR: [github.com/ipld/go-ipld-prime/codec/dagcbor](https://pkg.go.dev/github.com/ipld/go-ipld-prime/codec/dagcbor)
+* DAG-PB:  [github.com/ipld/go-codec-dagpb](https://pkg.go.dev/github.com/ipld/go-codec-dagpb)
 
 ### JavaScript
 
@@ -37,6 +54,7 @@ Fixtures are tested against the [js-multiformats](https://github.com/multiformat
 
 * DAG-CBOR: [@ipld/dag-cbor](https://github.com/ipld/js-dag-cbor)
 * DAG-JSON: [@ipld/dag-json](https://github.com/ipld/js-dag-cbor)
+* DAG-PB: [@ipld/dag-pb](https://github.com/ipld/js-dag-pb)
 
 ### Rust
 
