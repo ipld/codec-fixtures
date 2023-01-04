@@ -4,7 +4,9 @@ type FixtureName = string
 type FixtureBlacklistReason = string
 
 var FixtureBlacklist = map[FixtureName]FixtureBlacklistReason{
-	"int--11959030306112471732": "integer out of int64 range",
-	"int-11959030306112471731":  "integer out of int64 range",
-	"int-18446744073709551615":  "integer out of int64 range",
+	"int--11959030306112471732":            "integer out of int64 range",
+	"int-11959030306112471731":             "integer out of int64 range",
+	"int-18446744073709551615":             "integer out of int64 range",
+	"dag-pb/encode/bad sort":               "pre-sort not required",
+	"dag-pb/encode/bad sort (incl length)": "pre-sort not required",
 }
