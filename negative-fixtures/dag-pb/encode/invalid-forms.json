@@ -1,0 +1,747 @@
+[
+  {
+    "name": "empty map",
+    "dag-json": {},
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "Data and Links null",
+    "dag-json": {
+      "Data": null,
+      "Links": null
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "Data null, Links empty",
+    "dag-json": {
+      "Data": null,
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "Links null",
+    "dag-json": {
+      "Links": null
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "empty Link",
+    "dag-json": {
+      "Links": [
+        {}
+      ]
+    },
+    "error": "Invalid DAG-PB form (link must have a Hash)"
+  },
+  {
+    "name": "some Data, empty Link",
+    "dag-json": {
+      "Data": {
+        "/": {
+          "bytes": "AQID"
+        }
+      },
+      "Links": [
+        {}
+      ]
+    },
+    "error": "Invalid DAG-PB form (link must have a Hash)"
+  },
+  {
+    "name": "extraneous field",
+    "dag-json": {
+      "Data": {
+        "/": {
+          "bytes": "AQID"
+        }
+      },
+      "extraneous": true
+    },
+    "error": "Invalid DAG-PB form (extraneous properties)"
+  },
+  {
+    "name": "extraneous Links field",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "extraneous": true
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (extraneous properties on link)"
+  },
+  {
+    "name": "bad Data type (null)",
+    "dag-json": {
+      "Data": null,
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "bad Data type (true)",
+    "dag-json": {
+      "Data": true,
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "bad Data type (false)",
+    "dag-json": {
+      "Data": false,
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "bad Data type (int 0)",
+    "dag-json": {
+      "Data": 0,
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "bad Data type (int 101)",
+    "dag-json": {
+      "Data": 101,
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "bad Data type (int -101)",
+    "dag-json": {
+      "Data": -101,
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "bad Data type (float 1.1)",
+    "dag-json": {
+      "Data": 1.1,
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "bad Data type (list)",
+    "dag-json": {
+      "Data": [],
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "bad Data type (map)",
+    "dag-json": {
+      "Data": {},
+      "Links": []
+    },
+    "error": "Invalid DAG-PB form (Data must be bytes)"
+  },
+  {
+    "name": "bad Links type (null)",
+    "dag-json": {
+      "Links": null
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "bad Links type (true)",
+    "dag-json": {
+      "Links": true
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "bad Links type (false)",
+    "dag-json": {
+      "Links": false
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "bad Links type (int 0)",
+    "dag-json": {
+      "Links": 0
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "bad Links type (int 101)",
+    "dag-json": {
+      "Links": 101
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "bad Links type (int -101)",
+    "dag-json": {
+      "Links": -101
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "bad Links type (float 1.1)",
+    "dag-json": {
+      "Links": 1.1
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "bad Links type (string)",
+    "dag-json": {
+      "Links": "blip"
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "bad Links type (map)",
+    "dag-json": {
+      "Links": {}
+    },
+    "error": "Invalid DAG-PB form (Links must be a list)"
+  },
+  {
+    "name": "bad Link type (null)",
+    "dag-json": {
+      "Links": [
+        null
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link type (true)",
+    "dag-json": {
+      "Links": [
+        true
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link type (false)",
+    "dag-json": {
+      "Links": [
+        false
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link type (int 0)",
+    "dag-json": {
+      "Links": [
+        0
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link type (int 101)",
+    "dag-json": {
+      "Links": [
+        101
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link type (int -101)",
+    "dag-json": {
+      "Links": [
+        -101
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link type (float)",
+    "dag-json": {
+      "Links": [
+        1.1
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link type (string)",
+    "dag-json": {
+      "Links": [
+        "blip"
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link type (bytes)",
+    "dag-json": {
+      "Links": [
+        {
+          "/": {
+            "bytes": "AQID"
+          }
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link type (link)",
+    "dag-json": {
+      "Links": [
+        {
+          "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (bad link)"
+  },
+  {
+    "name": "bad Link, only Name",
+    "dag-json": {
+      "Links": [
+        {
+          "Name": "blip"
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link must have a Hash)"
+  },
+  {
+    "name": "bad Link, only Tsize",
+    "dag-json": {
+      "Links": [
+        {
+          "Tsize": 101
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link must have a Hash)"
+  },
+  {
+    "name": "bad Link, only Name and Tsize",
+    "dag-json": {
+      "Links": [
+        {
+          "Name": "blip",
+          "Tsize": 101
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link must have a Hash)"
+  },
+  {
+    "name": "bad Link.Hash type (null)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": null
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Hash must be a CID)"
+  },
+  {
+    "name": "bad Link.Hash type (true)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": true
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Hash must be a CID)"
+  },
+  {
+    "name": "bad Link.Hash type (false)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": false
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Hash must be a CID)"
+  },
+  {
+    "name": "bad Link.Hash type (int 0)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": 0
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Hash must be a CID)"
+  },
+  {
+    "name": "bad Link.Hash type (int 101)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": 101
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Hash must be a CID)"
+  },
+  {
+    "name": "bad Link.Hash type (int -101)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": -101
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Hash must be a CID)"
+  },
+  {
+    "name": "bad Link.Hash type (float)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": 1.1
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Hash must be a CID)"
+  },
+  {
+    "name": "bad Link.Hash type (string)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": "blip"
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Hash must be a CID)"
+  },
+  {
+    "name": "bad Link.Hash type (bytes)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": {
+              "bytes": "8AECAwQ"
+            }
+          }
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Hash must be a CID)"
+  },
+  {
+    "name": "bad Link.Name type (null)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": null
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Name must be a string)"
+  },
+  {
+    "name": "bad Link.Name type (true)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": true
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Name must be a string)"
+  },
+  {
+    "name": "bad Link.Name type (false)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": false
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Name must be a string)"
+  },
+  {
+    "name": "bad Link.Name type (int 0)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": 0
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Name must be a string)"
+  },
+  {
+    "name": "bad Link.Name type (int 101)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": 101
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Name must be a string)"
+  },
+  {
+    "name": "bad Link.Name type (int -101)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": -101
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Name must be a string)"
+  },
+  {
+    "name": "bad Link.Name type (float)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": 1.1
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Name must be a string)"
+  },
+  {
+    "name": "bad Link.Name type (bytes)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": {
+            "/": {
+              "bytes": "AQID"
+            }
+          }
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Name must be a string)"
+  },
+  {
+    "name": "bad Link.Name type (link)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          }
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Name must be a string)"
+  },
+  {
+    "name": "bad Link.Tsize type (null)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Tsize": null
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Tsize must be an integer)"
+  },
+  {
+    "name": "bad Link.Tsize type (true)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Tsize": true
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Tsize must be an integer)"
+  },
+  {
+    "name": "bad Link.Tsize type (false)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Tsize": false
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Tsize must be an integer)"
+  },
+  {
+    "name": "bad Link.Tsize type (int negative)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Tsize": -101
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Tsize cannot be negative)"
+  },
+  {
+    "name": "bad Link.Tsize type (float)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Tsize": 1.1
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Tsize must be an integer)"
+  },
+  {
+    "name": "bad Link.Tsize type (string)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Tsize": "blip"
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Tsize must be an integer)"
+  },
+  {
+    "name": "bad Link.Tsize type (bytes)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Tsize": {
+            "/": {
+              "bytes": "AQID"
+            }
+          }
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Tsize must be an integer)"
+  },
+  {
+    "name": "bad Link.Tsize type (link)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Tsize": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          }
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (link Tsize must be an integer)"
+  },
+  {
+    "name": "bad sort",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          }
+        },
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": "foo"
+        },
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": "bar"
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (links must be sorted by Name bytes)"
+  },
+  {
+    "name": "bad sort (incl length)",
+    "dag-json": {
+      "Links": [
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          }
+        },
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": "aa"
+        },
+        {
+          "Hash": {
+            "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+          },
+          "Name": "a"
+        }
+      ]
+    },
+    "error": "Invalid DAG-PB form (links must be sorted by Name bytes)"
+  }
+]

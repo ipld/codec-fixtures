@@ -1,0 +1,63 @@
+[
+  {
+    "name": "true",
+    "dag-json": true,
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "false",
+    "dag-json": false,
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "null",
+    "dag-json": null,
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "int (0)",
+    "dag-json": 0,
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "int (101)",
+    "dag-json": 101,
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "int (-101)",
+    "dag-json": -101,
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "float (1.1)",
+    "dag-json": 1.1,
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "string",
+    "dag-json": "blip",
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "list",
+    "dag-json": [],
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "bytes",
+    "dag-json": {
+      "/": {
+        "bytes": "AQID"
+      }
+    },
+    "error": "Invalid DAG-PB form"
+  },
+  {
+    "name": "link",
+    "dag-json": {
+      "/": "QmNPWHBrVQiiV8FpyNuEPhB9E2rbvdy9Yx79EY1EJuyf9o"
+    },
+    "error": "Invalid DAG-PB form"
+  }
+]
