@@ -114,3 +114,9 @@ func nodeToCid(lp ipld.LinkPrototype, node ipld.Node) (cid.Cid, error) {
 	}
 	return cidLink.Cid, nil
 }
+
+type negativeFixtureEncode struct {
+	Name    string      `json:"name"`
+	DagJson interface{} `json:"dag-json,omitempty"`
+	Error   string      `json:"error"`
+}
