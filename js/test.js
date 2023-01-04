@@ -11,6 +11,7 @@ import {
   negativeFixturesDecode,
   loadFixture
 } from './util.js'
+import { bytes } from 'multiformats'
 
 const { assert } = chai
 const utfEncoder = new TextEncoder()
@@ -33,7 +34,8 @@ describe('Codec fixtures', () => {
 describe.only('Codec negative fixtures', () => {
   for (const codec of negativeFixtureCodecs()) {
     describe(codec, () => {
-      const { encode } = codecs[codec].codec
+      const { encode, decode } = codecs[codec].codec
+
       for (const fixtures of negativeFixturesEncode(codec)) {
         for (const fixture of fixtures) {
           it(fixture.name, () => {
@@ -48,6 +50,20 @@ describe.only('Codec negative fixtures', () => {
               assert.fail('did not error')
             } catch (e) {
               assert.strictEqual(e.message, error)
+            }
+          })
+        }
+      }
+
+      for (const fixtures of negativeFixturesDecode(codec)) {
+        for (const { name, hex, error } of fixtures) {
+          it(name, () => {
+            const byts = bytes.fromHex(hex)
+            try {
+              decode(byts)
+              assert.fail('did not error')
+            } catch (e) {
+              assert.strictEqual(e.message.replace(/^protobuf: \(PBNode\) /, ''), error)
             }
           })
         }
