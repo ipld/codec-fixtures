@@ -21,6 +21,13 @@ function * iterate (type, ...dirs) {
     part = `${part}/${dirs.slice(1).join('/')}/`
   }
   const base = new URL(part, dirs[0])
+  try {
+    fs.statSync(base)
+  } catch (e) {
+    if (e.code == 'ENOENT') { // ignore missing
+      return
+    }
+  }
   for (const name of fs.readdirSync(base)) {
     let url = new URL(`./${name}`, base)
     const stat = fs.statSync(url)

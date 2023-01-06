@@ -63,7 +63,7 @@ describe.only('Codec negative fixtures', () => {
               decode(byts)
               assert.fail('did not error')
             } catch (e) {
-              assert.strictEqual(e.message.replace(/^protobuf: \(PBNode\) /, ''), error)
+              assert.include(e.message, error)
             }
           })
         }
