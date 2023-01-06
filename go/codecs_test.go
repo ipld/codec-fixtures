@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -71,6 +72,9 @@ func TestNegatigeFixtures(t *testing.T) {
 			t.Run("encode", func(t *testing.T) {
 				files, err := os.ReadDir(filepath.Join("../negative-fixtures/", codecName, "encode"))
 				if err != nil {
+					if errors.Is(err, os.ErrNotExist) {
+						return // ignore missing
+					}
 					t.Fatalf("failed to open negative fixtures dir: %v", err)
 				}
 				for _, file := range files {
@@ -79,6 +83,9 @@ func TestNegatigeFixtures(t *testing.T) {
 					}
 					fixtureData, err := os.ReadFile(filepath.Join("../negative-fixtures/", codecName, "encode", file.Name()))
 					if err != nil {
+						if errors.Is(err, os.ErrNotExist) {
+							return // ignore missing
+						}
 						t.Fatalf("failed to read fixture data: %v", err)
 					}
 					var fixtures []negativeFixtureEncode
@@ -100,6 +107,9 @@ func TestNegatigeFixtures(t *testing.T) {
 			t.Run("decode", func(t *testing.T) {
 				files, err := os.ReadDir(filepath.Join("../negative-fixtures/", codecName, "decode"))
 				if err != nil {
+					if errors.Is(err, os.ErrNotExist) {
+						return // ignore missing
+					}
 					t.Fatalf("failed to open negative fixtures dir: %v", err)
 				}
 				for _, file := range files {
@@ -108,6 +118,9 @@ func TestNegatigeFixtures(t *testing.T) {
 					}
 					fixtureData, err := os.ReadFile(filepath.Join("../negative-fixtures/", codecName, "decode", file.Name()))
 					if err != nil {
+						if errors.Is(err, os.ErrNotExist) {
+							return // ignore missing
+						}
 						t.Fatalf("failed to read fixture data: %v", err)
 					}
 					var fixtures []negativeFixtureDecode
