@@ -3,7 +3,7 @@ module github.com/ipld/codec-fixtures/go
 go 1.19
 
 require (
-	github.com/ipfs/go-cid v0.4.0
+	github.com/ipfs/go-cid v0.4.1
 	github.com/ipld/go-codec-dagpb v1.6.0
 	github.com/ipld/go-ipld-prime v0.20.0
 )
