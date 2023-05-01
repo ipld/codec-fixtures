@@ -390,8 +390,8 @@ github.com/urfave/cli/v2 v2.3.0/go.mod h1:LJmUH05zAU44vOAcrfzZQKsZbVcdbOG8rtL3/X
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
 github.com/valyala/fasttemplate v1.0.1/go.mod h1:UQGH1tvbgY+Nz5t2n7tXsz52dQxojPUpymEIMZ47gx8=
 github.com/valyala/fasttemplate v1.2.1/go.mod h1:KHLXt3tVN2HBp8eijSv/kGJopbvo7S+qRAEEKiv+SiQ=
-github.com/vulcanize/go-codec-dageth v0.1.0 h1:xWmqUba7ohUIZ6mPCNh2tvD3FtARaREaquX2CwiyO+A=
-github.com/vulcanize/go-codec-dageth v0.1.0/go.mod h1:4ivSPK5/szke3MHInlgYHNOXgi3noYWrAy9bd27byw4=
+github.com/vulcanize/go-codec-dageth v0.1.1 h1:dHNjfHetk3M3b1nyYZCj3kCEL18qkWx+2Vk5caCV9rA=
+github.com/vulcanize/go-codec-dageth v0.1.1/go.mod h1:4ivSPK5/szke3MHInlgYHNOXgi3noYWrAy9bd27byw4=
 github.com/warpfork/go-testmark v0.10.0 h1:E86YlUMYfwIacEsQGlnTvjk1IgYkyTGjPhF0RnwTCmw=
 github.com/warpfork/go-wish v0.0.0-20200122115046-b9ea61034e4a h1:G++j5e0OC488te356JvdhaM8YS6nMsjLAYF7JxCv07w=
 github.com/willf/bitset v1.1.3/go.mod h1:RjeCKbqT1RxIR/KWY6phxZiaY1IyutSBfGjNPySAYV4=

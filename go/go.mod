@@ -6,7 +6,7 @@ require (
 	github.com/ipfs/go-cid v0.3.2
 	github.com/ipld/go-codec-dagpb v1.5.0
 	github.com/ipld/go-ipld-prime v0.19.0
-	github.com/vulcanize/go-codec-dageth v0.1.0
+	github.com/vulcanize/go-codec-dageth v0.1.1
 )
 
 require (
@@ -44,5 +44,3 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	lukechampine.com/blake3 v1.1.6 // indirect
 )
-
-replace github.com/vulcanize/go-codec-dageth => /Users/iannorden/go/src/github.com/vulcanize/go-codec-dageth
