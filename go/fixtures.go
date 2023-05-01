@@ -144,7 +144,7 @@ var ethCodecs = map[codecName]ipld.LinkPrototype{
 	"eth-state-trie":       ethStateTrieLp,
 	"eth-storage-trie":     ethStorageTrieLp,
 }
-var defaultLinkSystem = cidlink.DefaultLinkSystem()
+var linkSystem = cidlink.DefaultLinkSystem()
 
 func setupEthLinkSystem() linking.LinkSystem {
 	ethRegistry := multicodec.Registry{}

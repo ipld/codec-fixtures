@@ -36,14 +36,14 @@ func TestFixtures(t *testing.T) {
 			continue
 		}
 		t.Run(fixtureName, func(t *testing.T) {
-			data, err := loadFixture(rootFixturePath, fixtureName, codecs, defaultLinkSystem)
+			data, err := loadFixture(rootFixturePath, fixtureName, codecs, linkSystem)
 			if err != nil {
 				t.Fatalf("failed to load fixture: %v", err)
 			}
 			for fromCodec := range data {
 				for toCodec := range data {
 					msg := fmt.Sprintf("decode(%v)->encode(%v)", fromCodec, toCodec)
-					verifyCid(t, msg, data[fromCodec].value, codecs[toCodec], data[toCodec].cid, defaultLinkSystem)
+					verifyCid(t, msg, data[fromCodec].value, codecs[toCodec], data[toCodec].cid, linkSystem)
 				}
 			}
 		})
