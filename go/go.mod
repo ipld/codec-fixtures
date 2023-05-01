@@ -44,3 +44,5 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	lukechampine.com/blake3 v1.1.6 // indirect
 )
+
+replace github.com/vulcanize/go-codec-dageth => /Users/iannorden/go/src/github.com/vulcanize/go-codec-dageth

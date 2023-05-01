@@ -17,6 +17,8 @@ import (
 	_ "github.com/ipld/go-ipld-prime/codec/dagjson"
 	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
 	basicnode "github.com/ipld/go-ipld-prime/node/basic"
+
+	dageth "github.com/vulcanize/go-codec-dageth"
 	"github.com/vulcanize/go-codec-dageth/header"
 	"github.com/vulcanize/go-codec-dageth/log"
 	"github.com/vulcanize/go-codec-dageth/log_trie"
@@ -125,20 +127,9 @@ var ethStateAccountLp = cidlink.LinkPrototype{Prefix: cid.Prefix{
 	MhLength: 32,
 }}
 var codecs = map[codecName]ipld.LinkPrototype{
-	"dag-pb":               dagPbLp,
-	"dag-cbor":             dagCborLp,
-	"dag-json":             dagJsonLp,
-	"eth-block":            ethHeaderLp,
-	"eth-block-list":       ethUnclesLp,
-	"eth-tx":               ethTxLp,
-	"eth-tx-trie":          ethTxTrieLp,
-	"eth-tx-receipt":       ethRctLp,
-	"eth-tx-receipt-trie":  ethRctTrieLp,
-	"eth-receipt-log":      ethLogLp,
-	"eth-receipt-log-trie": ethLogTrieLp,
-	"eth-account-snapshot": ethStateAccountLp,
-	"eth-state-trie":       ethStateTrieLp,
-	"eth-storage-trie":     ethStorageTrieLp,
+	"dag-pb":   dagPbLp,
+	"dag-cbor": dagCborLp,
+	"dag-json": dagJsonLp,
 }
 var ethCodecs = map[codecName]ipld.LinkPrototype{
 	"eth-block":            ethHeaderLp,
@@ -184,6 +175,14 @@ func setupEthLinkSystem() linking.LinkSystem {
 	return cidlink.LinkSystemUsingMulticodecRegistry(ethRegistry)
 }
 
+var ethTypeSlab = map[string]ipld.NodePrototype{
+	"eth-tx-trie":          dageth.Type.TrieNode,
+	"eth-tx-receipt-trie":  dageth.Type.TrieNode,
+	"eth-state-trie":       dageth.Type.TrieNode,
+	"eth-storage-trie":     dageth.Type.TrieNode,
+	"eth-receipt-log-trie": dageth.Type.TrieNode,
+}
+
 var rootFixturePath = "../fixtures/"
 var rootKeccak256FixturePath = "../keccak256_fixtures/"
 
@@ -209,6 +208,10 @@ func loadFixture(rootPath, dir string, codecMap map[codecName]ipld.LinkPrototype
 		}
 		ext = strings.TrimLeft(ext, ".")
 		na := basicnode.Prototype.Any.NewBuilder()
+		nodePrototype, ok := ethTypeSlab[ext]
+		if ok {
+			na = nodePrototype.NewBuilder()
+		}
 		lp, ok := codecMap[ext]
 		if !ok {
 			fmt.Printf("unknown codec '%v' for fixture '%v'\n", ext, dir)
