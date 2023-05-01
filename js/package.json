@@ -25,7 +25,7 @@
     "@ipld/dag-json": "^8.0.0",
     "@ipld/dag-pb": "^2.1.5",
     "@multiformats/sha3": "^2.0.16",
-    "@vulcanize/dag-eth": "^1.0.1",
+    "@vulcanize/dag-eth": "^1.0.2",
     "chai": "^4.3.4",
     "ethereum-cryptography": "^1.1.2",
     "ipld-garbage": "^5.0.0",
