@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Link with no Hash",
+    "hex": "1200",
+    "error": "Invalid Hash field found in link, expected CID"
+  },
+  {
+    "name": "Data, and Link with no Hash",
+    "hex": "12000a050001020304",
+    "error": "Invalid Hash field found in link, expected CID"
+  },
+  {
+    "name": "Link with zero Hash",
+    "hex": "12020a00",
+    "error": "Invalid Hash field found in link, expected CID"
+  },
+  {
+    "name": "Link with just Name",
+    "hex": "12021200",
+    "error": "Invalid Hash field found in link, expected CID"
+  },
+  {
+    "name": "Link with just empty Name",
+    "hex": "12021200",
+    "error": "Invalid Hash field found in link, expected CID"
+  },
+  {
+    "name": "Link with just some Name",
+    "hex": "120b1209736f6d65206e616d65",
+    "error": "Invalid Hash field found in link, expected CID"
+  },
+  {
+    "name": "Link with just zero Tsize",
+    "hex": "12021800",
+    "error": "Invalid Hash field found in link, expected CID"
+  },
+  {
+    "name": "Link with just nonzero Tsize",
+    "hex": "120318f207",
+    "error": "Invalid Hash field found in link, expected CID"
+  },
+  {
+    "name": "data between links",
+    "hex": "12240a221220cf92fdefcdc34cac009c8b05eb662be0618db9de55ecd42785e9ec6712f8df650a040802180612240a221220cf92fdefcdc34cac009c8b05eb662be0618db9de55ecd42785e9ec6712f8df65",
+    "error": "duplicate Links section"
+  }
+]

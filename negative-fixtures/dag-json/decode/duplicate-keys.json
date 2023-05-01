@@ -1,0 +1,7 @@
+[
+  {
+    "name": "duplicate map keys",
+    "hex": "7b22666f6f223a312c22666f6f223a322c22626172223a337d",
+    "error": "repeat map key \"foo\""
+  }
+]

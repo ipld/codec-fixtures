@@ -253,3 +253,15 @@ func nodeToCid(ls linking.LinkSystem, lp ipld.LinkPrototype, node ipld.Node) (ci
 	}
 	return cidLink.Cid, nil
 }
+
+type negativeFixtureEncode struct {
+	Name    string      `json:"name"`
+	DagJson interface{} `json:"dag-json,omitempty"`
+	Error   string      `json:"error"`
+}
+
+type negativeFixtureDecode struct {
+	Name  string `json:"name"`
+	Hex   string `json:"hex"`
+	Error string `json:"error"`
+}
