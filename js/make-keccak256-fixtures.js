@@ -1,7 +1,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 
-import { keccak256 } from './hasher.js'
+import { keccak256 } from '@multiformats/sha3'
 import * as Block from 'multiformats/block'
 import { ethCodecs } from './codecs.js'
 

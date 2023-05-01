@@ -4,7 +4,7 @@ import chai from 'chai'
 import { sha256 } from 'multiformats/hashes/sha2'
 import * as Block from 'multiformats/block'
 import { codecs, ethCodecs } from './codecs.js'
-import { keccak256 } from './hasher.js'
+import { keccak256 } from '@multiformats/sha3'
 import {fixtureDirectories, keccak256FixtureDirectories, loadFixture} from './util.js'
 
 const { assert } = chai
