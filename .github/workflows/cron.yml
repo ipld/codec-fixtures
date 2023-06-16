@@ -78,11 +78,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Use Rust ${{ matrix.rust-version }}
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: ${{ matrix.rust-version }}
-          override: true
       # The manifest file needs to be named `Cargo.toml`, hence rename if needed.
       - name: Use specified manifest file ${{ matrix.manifest }}
         if: matrix.manifest != 'Cargo.toml'
