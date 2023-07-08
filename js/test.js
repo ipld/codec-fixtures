@@ -3,9 +3,11 @@
 import chai from 'chai'
 import { sha256 } from 'multiformats/hashes/sha2'
 import * as Block from 'multiformats/block'
-import { codecs } from './codecs.js'
+import { codecs, ethCodecs } from './codecs.js'
+import { keccak256 } from '@multiformats/sha3'
 import {
   fixtureDirectories,
+  keccak256FixtureDirectories,
   negativeFixtureCodecs,
   negativeFixturesEncode,
   negativeFixturesDecode,
@@ -66,6 +68,21 @@ describe.only('Codec negative fixtures', () => {
               assert.include(e.message, error)
             }
           })
+        }
+      }
+    })
+  }
+})
+
+describe('Ethereum codec fixtures', () => {
+  for (const { name, url } of keccak256FixtureDirectories()) {
+    it (name, async () => {
+      const data = await loadFixture(url)
+      for (const [fromCodec, { bytes }] of Object.entries(data)) {
+        const value = ethCodecs[fromCodec].codec.decode(bytes)
+        for (const [toCodec, { cid }] of Object.entries(data)) {
+          const block = await Block.encode({ value, codec: ethCodecs[toCodec].codec, hasher: keccak256})
+          assert.equal(block.cid.toString(), cid, `CIDs match for data decoded from ${fromCodec} encoded as ${toCodec}`)
         }
       }
     })
