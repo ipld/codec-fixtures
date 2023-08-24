@@ -4,8 +4,14 @@ use std::path::PathBuf;
 
 use libipld::{cid::Cid, codec::Codec, ipld::Ipld, IpldCodec};
 
-static FIXTURE_SKIPLIST: [(&str, &str); 1] =
-    [("int--11959030306112471732", "integer out of int64 range")];
+static FIXTURE_SKIPLIST: [(&str, &str, &str); 1] = [
+    // This test is skipped as the current DAG-JSON decoder decodes such an integer into a float.
+    (
+        "dag-json",
+        "int--11959030306112471732",
+        "integer out of int64 range",
+    ),
+];
 
 /// Contents of a single fixture.
 #[derive(Debug)]
@@ -26,7 +32,7 @@ pub struct NegativeFixture {
 }
 
 /// Returns all fixtures from a directory.
-pub fn load_fixtures(dir: DirEntry) -> Vec<Fixture> {
+pub fn load_fixtures(dir: &DirEntry) -> Vec<Fixture> {
     fs::read_dir(&dir.path())
         .unwrap()
         .filter_map(|file| {
@@ -72,16 +78,17 @@ pub fn fixture_directories(name: &str) -> Vec<DirEntry> {
 }
 
 /// Returns true if a test fixture is on the skip list
-pub fn skip_test(dir: &DirEntry) -> bool {
-    for (name, reason) in FIXTURE_SKIPLIST {
-        if dir
-            .path()
-            .into_os_string()
-            .to_str()
-            .unwrap()
-            .ends_with(name)
+pub fn skip_test(dir: &DirEntry, codec: &str) -> bool {
+    for (skip_codec, name, reason) in FIXTURE_SKIPLIST {
+        if codec == skip_codec
+            && dir
+                .path()
+                .into_os_string()
+                .to_str()
+                .unwrap()
+                .ends_with(name)
         {
-            eprintln!("Skipping fixture '{}': {}", name, reason);
+            eprintln!("Skipping {} fixture '{}': {}", codec, name, reason);
             return true;
         }
     }

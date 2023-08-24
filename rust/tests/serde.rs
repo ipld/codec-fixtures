@@ -27,10 +27,6 @@ impl Codecs {
 #[test]
 fn codec_fixtures() {
     for dir in utils::fixture_directories("fixtures") {
-        if utils::skip_test(&dir) {
-            continue;
-        }
-
         let fixture_name = dir
             .path()
             .file_stem()
@@ -40,8 +36,12 @@ fn codec_fixtures() {
             .expect("Filename must be valid UTF-8")
             .to_string();
         println!("Testing fixture {}", fixture_name);
-        let fixtures = utils::load_fixtures(dir);
+        let fixtures = utils::load_fixtures(&dir);
         for from_fixture in &fixtures {
+            if utils::skip_test(&dir, &from_fixture.codec) {
+                continue;
+            }
+
             // Take a fixture of one codec and…
             let decoded: Ipld = match &from_fixture.codec[..] {
                 "dag-cbor" => {
@@ -54,6 +54,10 @@ fn codec_fixtures() {
 
             // …transcode it into any other fixture.
             for to_fixture in &fixtures {
+                if utils::skip_test(&dir, &to_fixture.codec) {
+                    continue;
+                }
+
                 let (codec_code, data) = match &to_fixture.codec[..] {
                     "dag-cbor" => (
                         0x71,
