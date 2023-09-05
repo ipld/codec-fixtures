@@ -19,7 +19,7 @@ jobs:
       run:
         working-directory: js
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3.8.1
         with:
@@ -44,7 +44,7 @@ jobs:
       run:
         working-directory: go
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Go ${{ matrix.go-version }}
         uses: actions/setup-go@v2
         with:
@@ -76,7 +76,7 @@ jobs:
       run:
         working-directory: rust
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Rust ${{ matrix.rust-version }}
         uses: dtolnay/rust-toolchain@master
         with:
