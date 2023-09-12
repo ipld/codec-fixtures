@@ -26,10 +26,6 @@ impl Codecs {
 #[test]
 fn codec_fixtures() {
     for dir in utils::fixture_directories("fixtures") {
-        if utils::skip_test(&dir) {
-            continue;
-        }
-
         let fixture_name = dir
             .path()
             .file_stem()
@@ -39,8 +35,12 @@ fn codec_fixtures() {
             .expect("Filename must be valid UTF-8")
             .to_string();
         println!("Testing fixture {}", fixture_name);
-        let fixtures = utils::load_fixtures(dir);
+        let fixtures = utils::load_fixtures(&dir);
         for from_fixture in &fixtures {
+            if utils::skip_test(&dir, &from_fixture.codec) {
+                continue;
+            }
+
             // Take a fixture of one codec and…
             let decoded: Ipld = Codecs::get(&from_fixture.codec)
                 .decode(&from_fixture.bytes)
@@ -48,6 +48,10 @@ fn codec_fixtures() {
 
             // …transcode it into any other fixture.
             for to_fixture in &fixtures {
+                if utils::skip_test(&dir, &to_fixture.codec) {
+                    continue;
+                }
+
                 let codec = Codecs::get(&to_fixture.codec);
                 let data = codec.encode(&decoded).expect("Encoding must work");
                 let digest = Code::Sha2_256.digest(&data);
