@@ -170,8 +170,7 @@ func testNegativeFixtureEncode(codecName string, fixture negativeFixtureEncode) 
 		err = encoder(node, &buf)
 		if err == nil {
 			t.Errorf("should error on encode")
-		}
-		if !strings.EqualFold(err.Error(), fixture.Error) {
+		} else if !strings.EqualFold(err.Error(), fixture.Error) {
 			t.Logf("error mismatch: [%s] ~= [%s]", err.Error(), fixture.Error)
 		}
 	}
