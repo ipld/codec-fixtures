@@ -8,7 +8,7 @@ This repository contains fixtures for standard IPLD codecs. It is used to verify
 
 The [fixtures](./fixtures/) directory contains a suite of test data, where each subdirectory comprises an encoded IPLD block in the formats that are supported for that data. A file containing the binary encoded form of that block has the name `<CID>.<codec-name>`, where the `CID` is the CIDv1 using a SHA2-256 multihash of the block for that codec. The `codec-name` is the standard codec name as found in the [multicodec table](https://github.com/multiformats/multicodec/blob/master/table.csv).
 
-Fixtures are also available in CAR format, in the [./fixtures.car](./fixtures.car) file, with every valid variation stored as a separate block.
+Fixtures are also available in CAR format, in the [./fixtures.car](./fixtures.car) file, with every valid variation stored as a separate block. (Note that this file includes blocks that may not be readable on some systems, e.g. Kubo because of the currently [unsupported Go edge cases](./go/special_cases.go)).
 
 Codec implementations are expected to be able to:
 
