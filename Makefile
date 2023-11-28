@@ -1,21 +1,30 @@
+JS_DIR=js
+GO_DIR=go
+RUST_DIR=rust
+
+.PHONY: all testjs testgo testrust _build car build clean
+
 all: testjs testgo testrust
 
-js/node_modules:
-	cd js && npm install
+$(JS_DIR)/node_modules:
+	cd $(JS_DIR) && npm install
 
-testjs: js/node_modules
-	cd js && npm test
+testjs: $(JS_DIR)/node_modules
+	cd $(JS_DIR) && npm test
 
 testgo:
-	cd go && go test
+	cd $(GO_DIR) && go test
 
 testrust:
-	cd rust && cargo test -- --nocapture
+	cd $(RUST_DIR) && cargo test -- --nocapture
 
 _build:
-	cd js && npm run build
+	cd $(JS_DIR) && npm run build
 
-car: js/node_modules
-	cd js && npm run car
+car: $(JS_DIR)/node_modules
+	cd $(JS_DIR) && npm run car
 
-build: js/node_modules _build car
+build: $(JS_DIR)/node_modules _build car
+
+clean:
+	rm -rf $(JS_DIR)/node_modules
