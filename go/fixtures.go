@@ -83,7 +83,7 @@ func loadFixture(dir string) (fixtureSet, error) {
 		}
 		err = decoder(na, bytes.NewReader(byts))
 		if err != nil {
-			return fixtures, err
+			return fixtures, fmt.Errorf("failed to decode using %s: %w", ext, err)
 		}
 		fixtures[ext] = codecFixture{
 			codec: ext,
