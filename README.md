@@ -8,7 +8,9 @@ This repository contains fixtures for standard IPLD codecs. It is used to verify
 
 The [fixtures](./fixtures/) directory contains a suite of test data, where each subdirectory comprises an encoded IPLD block in the formats that are supported for that data. A file containing the binary encoded form of that block has the name `<CID>.<codec-name>`, where the `CID` is the CIDv1 using a SHA2-256 multihash of the block for that codec. The `codec-name` is the standard codec name as found in the [multicodec table](https://github.com/multiformats/multicodec/blob/master/table.csv).
 
-Implementations are expected to be able to:
+Fixtures are also available in CAR format, in the [./fixtures.car](./fixtures.car) file, with every valid variation stored as a separate block.
+
+Codec implementations are expected to be able to:
 
 1. Read and decode the IPLD block from these files
 2. Re-encode the IPLD block using the supported codecs
@@ -18,7 +20,7 @@ Since the block is encoded in different forms, by re-encoding each decoded form 
 
 ## Adding fixtures
 
-The [_fixtures_src](./_fixtures_src/) directory contains the source of each of fixtures contained in the [fixtures](./fixtures/) directory. Each file in [_fixtures_src](./_fixtures_src/) contains an encoded form of a block using one of the supported codecs. The name of the file is `<fixture-name>.<codec-name>`. The [js/make-fixtures.js](./js/make-fixtures.js) program (run with `node js/make-fixtures.js`) is used to generate the fixtures in [fixtures](./fixtures/) for each of the source files.
+The [_fixtures_src](./_fixtures_src/) directory contains the source of each of fixtures contained in the [fixtures](./fixtures/) directory. Each file in [_fixtures_src](./_fixtures_src/) contains an encoded form of a block using one of the supported codecs. The name of the file is `<fixture-name>.<codec-name>`. The [js/make-fixtures.js](./js/make-fixtures.js) program (run with `make build`) is used to generate the fixtures in [fixtures](./fixtures/) for each of the source files.
 
 Fixture generation uses the JavaScript stack for generating data, but this is not a requirement. If you would like to add fixtures and would like to create them manually, or add an alternative mechanism for generating fixtures from source then please do so.
 
