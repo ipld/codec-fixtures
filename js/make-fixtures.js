@@ -10,7 +10,8 @@ const fixturesDir = new URL('../fixtures/', import.meta.url)
 const fixturesSrcDir = new URL('../_fixtures_src/', import.meta.url)
 
 async function makeGarbage () {
-  for (let i = 0; i < 25;) {
+  const count = 25
+  for (let i = 0; i < count;) {
     const value = garbage(5000)
     const block = await Block.encode({ value, codec: codecs['dag-cbor'].codec, hasher: sha256 })
     if (block.bytes.length < 1000) {
@@ -19,9 +20,11 @@ async function makeGarbage () {
     await fs.writeFile(new URL(`./garbage-${i.toString().padStart(2, '0')}.dag-cbor`, fixturesSrcDir), block.bytes)
     i++
   }
+  return count
 }
 
 async function makeFixtures () {
+  let count = 0
   await Promise.all((await fs.readdir(fixturesSrcDir)).map(async (file) => {
     const furl = new URL(file, fixturesSrcDir)
     const stat = await fs.stat(furl)
@@ -61,18 +64,16 @@ async function makeFixtures () {
         throw err
       }
       await fs.writeFile(new URL(`./${block.cid.toString()}.${codec.name}`, fdir), block.bytes)
+      count++
     }
   }))
+  return count
 }
 
-if (process.argv.includes('--garbage')) {
-  makeGarbage().catch((err) => {
-    console.error(err)
-    process.exit(1)
-  })
-} else {
-  makeFixtures().catch((err) => {
-    console.error(err)
-    process.exit(1)
-  })
-}
+const p = process.argv.includes('--garbage') ? makeGarbage() : makeFixtures()
+p.then((count) => {
+  console.log(`Wrote ${count} fixtures`)
+}).catch((err) => {
+  console.error(err)
+  process.exit(1)
+})
