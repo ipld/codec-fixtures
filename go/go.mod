@@ -1,6 +1,6 @@
 module github.com/ipld/codec-fixtures/go
 
-go 1.19
+go 1.20
 
 require (
 	github.com/ipfs/go-cid v0.4.1
@@ -9,7 +9,6 @@ require (
 )
 
 require (
-	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/minio/sha256-simd v1.0.0 // indirect
 	github.com/mr-tron/base58 v1.2.0 // indirect
@@ -19,7 +18,6 @@ require (
 	github.com/multiformats/go-multihash v0.2.3 // indirect
 	github.com/multiformats/go-varint v0.0.6 // indirect
 	github.com/polydawn/refmt v0.89.0 // indirect
-	github.com/smartystreets/assertions v1.13.0 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/sys v0.1.0 // indirect
