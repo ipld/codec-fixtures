@@ -3,7 +3,7 @@ import path from 'path'
 
 import { sha256 } from 'multiformats/hashes/sha2'
 import * as Block from 'multiformats/block'
-import { garbage } from 'ipld-garbage'
+import { garbage } from '@ipld/garbage'
 import { codecs } from './codecs.js'
 
 const fixturesDir = new URL('../fixtures/', import.meta.url)
