@@ -22,11 +22,11 @@
   "homepage": "https://github.com/ipld/codec-fixtures#readme",
   "dependencies": {
     "@ipld/car": "^5.2.4",
-    "@ipld/dag-cbor": "^9.0.6",
-    "@ipld/dag-json": "^10.1.5",
-    "@ipld/dag-pb": "^4.0.6",
-    "chai": "^4.3.10",
-    "ipld-garbage": "^5.0.0",
+    "@ipld/dag-cbor": "^9.0.7",
+    "@ipld/dag-json": "^10.1.6",
+    "@ipld/dag-pb": "^4.0.7",
+    "@ipld/garbage": "^6.0.5",
+    "chai": "^5.0.0",
     "mocha": "^10.2.0",
     "multiformats": "^13.0.0",
     "testmark.js": "^1.0.7"
