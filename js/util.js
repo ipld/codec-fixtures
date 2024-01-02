@@ -29,6 +29,12 @@ function * iterate (type, ...dirs) {
     }
   }
   for (const name of fs.readdirSync(base)) {
+    // if name is 'string-𐅑' and OS is windows and Node.js version is 20.x then
+    // skip, see https://github.com/nodejs/node/issues/48673 which may be fixed
+    // at some point by a backport to LTS, in which case this skip can be undone
+    if (name === 'string-𐅑' && process.platform === 'win32' && process.version.startsWith('v20.')) {
+      continue
+    }
     let url = new URL(`./${name}`, base)
     const stat = fs.statSync(url)
     if ((type === 'dir' && !stat.isDirectory()) || (type === 'file' && stat.isDirectory())) {
