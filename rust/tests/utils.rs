@@ -2,7 +2,7 @@ use std::env;
 use std::fs::{self, DirEntry};
 use std::path::PathBuf;
 
-use libipld::{cid::Cid, codec::Codec, ipld::Ipld, IpldCodec};
+use ipld_core::{cid::Cid, ipld::Ipld};
 
 static FIXTURE_SKIPLIST: [(&str, &str, &str); 1] = [
     // This test is skipped as the current DAG-JSON decoder decodes such an integer into a float.
@@ -33,7 +33,7 @@ pub struct NegativeFixture {
 
 /// Returns all fixtures from a directory.
 pub fn load_fixtures(dir: &DirEntry) -> Vec<Fixture> {
-    fs::read_dir(&dir.path())
+    fs::read_dir(dir.path())
         .unwrap()
         .filter_map(|file| {
             // Filter out invalid files.
@@ -108,17 +108,20 @@ pub fn load_negative_fixtures(mut dir: PathBuf, en_or_decode: &str) -> Vec<Negat
                 let file = file.ok()?;
 
                 let path = file.path();
-                let bytes = fs::read(&path).expect("File must be able to be read");
+                let bytes = fs::read(path).expect("File must be able to be read");
                 // Use DAG-JSON for parsing, so we don't need and extra JSON parser.
-                let ipld: Ipld = IpldCodec::DagJson.decode(&bytes).expect("It's valid JSON");
+                let ipld: Ipld = serde_ipld_dagjson::from_slice(&bytes).expect("It's valid JSON");
 
                 if let Ipld::List(list) = ipld {
                     let fixtures: Vec<_> = list
                         .iter()
                         .map(|fixture| {
-                            if let Ok(Ipld::String(name)) = fixture.get("name") {
-                                let dag_json = fixture.get("dag-json").ok().cloned();
-                                let hex = if let Ok(Ipld::String(data)) = fixture.get("hex") {
+                            if let Ok(Some(Ipld::String(name))) = fixture.get("name") {
+                                let dag_json = fixture
+                                    .get("dag-json")
+                                    .expect("dag-json field exists")
+                                    .cloned();
+                                let hex = if let Ok(Some(Ipld::String(data))) = fixture.get("hex") {
                                     Some(hex::decode(data).unwrap())
                                 } else {
                                     None

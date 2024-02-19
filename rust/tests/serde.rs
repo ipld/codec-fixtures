@@ -1,25 +1,67 @@
 mod utils;
 
-use libipld::{
-    cid::Cid,
-    codec::Codec,
-    ipld::Ipld,
-    multihash::{Code, MultihashDigest},
-    IpldCodec,
-};
+use ipld_core::{cid::Cid, codec::Codec, ipld::Ipld};
+use ipld_dagpb::{DagPbCodec, Error as DagPbError};
+use multihash_codetable::{Code, MultihashDigest};
+use serde_ipld_dagcbor::{codec::DagCborCodec, error::CodecError as DagCborError};
+use serde_ipld_dagjson::{codec::DagJsonCodec, error::CodecError as DagJsonError};
+use thiserror::Error;
 
 /// Mapping between string identifiers and actual codecs.
-struct Codecs;
+#[allow(clippy::enum_variant_names)]
+enum IpldCodec {
+    DagCbor,
+    DagJson,
+    DagPb,
+}
 
-// Currently the only codec that is implemented based on Serde is DAG-CBOR. Until others have been
-// implemented, use the non-Serde based ones.
-impl Codecs {
+#[allow(clippy::enum_variant_names)]
+#[derive(Debug, Error)]
+enum Error {
+    #[error("DAG-CBOR error: {0}")]
+    DagCbor(#[from] DagCborError),
+    #[error("DAG-JSON error: {0}")]
+    DagJson(#[from] DagJsonError),
+    #[error("DAG-PB error: {0}")]
+    DagPb(#[from] DagPbError),
+}
+
+impl IpldCodec {
     /// Map codec strings to actual codecs.
-    fn get(codec: &str) -> IpldCodec {
+    fn new(codec: &str) -> Self {
         match codec {
-            "dag-json" => IpldCodec::DagJson,
-            "dag-pb" => IpldCodec::DagPb,
+            "dag-cbor" => Self::DagCbor,
+            "dag-json" => Self::DagJson,
+            "dag-pb" => Self::DagPb,
             _ => panic!("Unknown codec"),
+        }
+    }
+
+    /// Encode some IPLD object into bytes with the codec the enum represents.
+    fn encode(&self, ipld: &Ipld) -> Result<Vec<u8>, Error> {
+        match self {
+            Self::DagCbor => Ok(DagCborCodec::encode_to_vec(ipld)?),
+            Self::DagJson => Ok(DagJsonCodec::encode_to_vec(ipld)?),
+            Self::DagPb => Ok(DagPbCodec::encode_to_vec(ipld)?),
+        }
+    }
+
+    /// Decode some byte of the codec the enum represents into IPLD object.
+    fn decode(&self, bytes: &[u8]) -> Result<Ipld, Error> {
+        match self {
+            Self::DagCbor => Ok(DagCborCodec::decode_from_slice(bytes)?),
+            Self::DagJson => Ok(DagJsonCodec::decode_from_slice(bytes)?),
+            Self::DagPb => Ok(DagPbCodec::decode_from_slice(bytes)?),
+        }
+    }
+}
+
+impl From<IpldCodec> for u64 {
+    fn from(codec: IpldCodec) -> Self {
+        match codec {
+            IpldCodec::DagCbor => <DagCborCodec as Codec<Ipld>>::CODE,
+            IpldCodec::DagJson => <DagJsonCodec as Codec<Ipld>>::CODE,
+            IpldCodec::DagPb => <DagPbCodec as Codec<Ipld>>::CODE,
         }
     }
 }
@@ -29,7 +71,7 @@ fn codec_fixtures() {
     for dir in utils::fixture_directories("fixtures") {
         let fixture_name = dir
             .path()
-            .file_stem()
+            .file_name()
             .expect("Directory must have a name")
             .to_os_string()
             .to_str()
@@ -43,36 +85,19 @@ fn codec_fixtures() {
             }
 
             // Take a fixture of one codec and…
-            let decoded: Ipld = match &from_fixture.codec[..] {
-                "dag-cbor" => {
-                    serde_ipld_dagcbor::from_slice(&from_fixture.bytes).expect("Decoding must work")
-                }
-                _ => Codecs::get(&from_fixture.codec)
-                    .decode(&from_fixture.bytes)
-                    .expect("Decoding must work"),
-            };
+            let decoded: Ipld = IpldCodec::new(&from_fixture.codec)
+                .decode(&from_fixture.bytes)
+                .expect("Decoding must work");
 
             // …transcode it into any other fixture.
             for to_fixture in &fixtures {
                 if utils::skip_test(&dir, &to_fixture.codec) {
                     continue;
                 }
-
-                let (codec_code, data) = match &to_fixture.codec[..] {
-                    "dag-cbor" => (
-                        0x71,
-                        serde_ipld_dagcbor::to_vec(&decoded).expect("Encoding must work"),
-                    ),
-                    _ => {
-                        let codec = Codecs::get(&to_fixture.codec);
-                        (
-                            codec.into(),
-                            codec.encode(&decoded).expect("Encoding must work"),
-                        )
-                    }
-                };
+                let codec = IpldCodec::new(&to_fixture.codec);
+                let data = codec.encode(&decoded).expect("Encoding must work");
                 let digest = Code::Sha2_256.digest(&data);
-                let cid = Cid::new_v1(codec_code, digest);
+                let cid = Cid::new_v1(codec.into(), digest);
                 assert_eq!(
                     cid, to_fixture.cid,
                     "CIDs match for the data decoded from {} encoded as {}",
@@ -91,6 +116,7 @@ fn negative_fixtures() {
             .to_str()
             .expect("Codec names are valid UTF-8")
             .to_string();
+        let codec = IpldCodec::new(&codec_name);
 
         let encode_fixtures = utils::load_negative_fixtures(codec_dir.path(), "encode");
         for fixture in encode_fixtures {
@@ -98,14 +124,11 @@ fn negative_fixtures() {
                 "Testing negative encode fixture for {}: {}",
                 codec_name, fixture.name
             );
-            let error = match &codec_name[..] {
-                "dag-cbor" => serde_ipld_dagcbor::to_vec(&fixture.dag_json.unwrap()).is_err(),
-                _ => Codecs::get(&codec_name)
-                    .encode(&fixture.dag_json.unwrap())
-                    .is_err(),
-            };
-            if !error {
-                assert!(false, "Did not error")
+
+            // The `fixture.dag_json` is already decoded into an `Ipld` object, so we can use it
+            // directly to encode the fixtures.
+            if codec.encode(&fixture.dag_json.unwrap()).is_ok() {
+                panic!("did not error");
             }
         }
 
@@ -115,16 +138,8 @@ fn negative_fixtures() {
                 "Testing negative decode fixture for {}: {}",
                 codec_name, fixture.name
             );
-            let error = match &codec_name[..] {
-                "dag-cbor" => {
-                    serde_ipld_dagcbor::from_slice::<Ipld>(&fixture.hex.unwrap()).is_err()
-                }
-                _ => Codecs::get(&codec_name)
-                    .decode::<Ipld>(&fixture.hex.unwrap())
-                    .is_err(),
-            };
-            if !error {
-                assert!(false, "Did not error")
+            if codec.decode(&fixture.hex.unwrap()).is_ok() {
+                panic!("did not error");
             }
         }
     }
