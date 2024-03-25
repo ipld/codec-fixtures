@@ -5,5 +5,9 @@ edition = "2021"
 
 [dev-dependencies]
 hex = "0.4.3"
-libipld = { version = "*", features = ["serde-codec"] }
+ipld-core = { version = "0.3.2", features = ["serde"] }
+ipld-dagpb = "*"
+multihash-codetable = { version = "0.1.2", features = ["sha2"] }
 serde_ipld_dagcbor = "*"
+serde_ipld_dagjson = "*"
+thiserror = "1.0.58"
