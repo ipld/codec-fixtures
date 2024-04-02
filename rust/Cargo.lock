@@ -240,9 +240,9 @@ dependencies = [
 
 [[package]]
 name = "ipld-core"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8cd30b9d3019be78818b8d20691ecfa98630ae2d7fb23ffd4d668ee27ad25108"
+checksum = "b4ede82a79e134f179f4b29b5fdb1eb92bd1b38c4dfea394c539051150a21b9b"
 dependencies = [
  "cid",
  "serde",
