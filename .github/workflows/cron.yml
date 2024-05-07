@@ -6,6 +6,11 @@ on:
 
 name: Test against latest libraries
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ./js
+
 jobs:
   node:
     name: Node.js
@@ -15,9 +20,6 @@ jobs:
         node-version: [18.x, 20.x, lts/*, current]
         os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: js
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -25,7 +27,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install latest version of dependencies
-        run: npm install $(node -pe 'Object.keys(require("./package.json").dependencies).map((d) => `${d}@latest`).join(" ")');
+        run: |
+          npm install $(node -pe 'Object.keys(require("./package.json").dependencies).map((d) => `${d}@latest`).join(" ")')
       - name: Node.js information
         run: |
           node -v
