@@ -251,9 +251,9 @@ dependencies = [
 
 [[package]]
 name = "ipld-dagpb"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "500af0d645ad3c26b544d2ec77c87fefec9319f5eda567d0993b9db59708994f"
+checksum = "c5eb3c08f1508fa62ffe1a805aafa116d2eb034b3542c85596db132f279abc47"
 dependencies = [
  "bytes",
  "ipld-core",
