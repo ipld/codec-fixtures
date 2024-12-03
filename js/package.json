@@ -27,7 +27,7 @@
     "@ipld/dag-pb": "^4.0.7",
     "@ipld/garbage": "^6.0.5",
     "chai": "^5.0.0",
-    "mocha": "^10.2.0",
+    "mocha": "^11.0.1",
     "multiformats": "^13.0.0",
     "testmark.js": "^1.0.7"
   }
