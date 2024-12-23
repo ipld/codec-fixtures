@@ -10,4 +10,4 @@ ipld-dagpb = "*"
 multihash-codetable = { version = "0.1.4", features = ["sha2"] }
 serde_ipld_dagcbor = "*"
 serde_ipld_dagjson = "*"
-thiserror = "2.0.7"
+thiserror = "2.0.9"
