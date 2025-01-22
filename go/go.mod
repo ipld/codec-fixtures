@@ -1,6 +1,6 @@
 module github.com/ipld/codec-fixtures/go
 
-go 1.20
+go 1.22
 
 require (
 	github.com/ipfs/go-cid v0.4.1
