@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/ipfs/go-cid v0.5.0
-	github.com/ipld/go-codec-dagpb v1.6.0
+	github.com/ipld/go-codec-dagpb v1.7.0
 	github.com/ipld/go-ipld-prime v0.21.0
 )
 
@@ -21,6 +21,6 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
-	google.golang.org/protobuf v1.28.1 // indirect
+	google.golang.org/protobuf v1.36.5 // indirect
 	lukechampine.com/blake3 v1.1.6 // indirect
 )
