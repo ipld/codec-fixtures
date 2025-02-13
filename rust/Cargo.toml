@@ -5,7 +5,7 @@ edition = "2021"
 
 [dev-dependencies]
 hex = "0.4.3"
-ipld-core = { version = "0.4.1", features = ["serde"] }
+ipld-core = { version = "0.4.2", features = ["serde"] }
 ipld-dagpb = "*"
 multihash-codetable = { version = "0.1.4", features = ["sha2"] }
 serde_ipld_dagcbor = "*"
