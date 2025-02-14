@@ -441,9 +441,9 @@ dependencies = [
 
 [[package]]
 name = "serde_ipld_dagcbor"
-version = "0.6.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ded35fbe4ab8fdec1f1d14b4daff2206b1eada4d6e708cb451d464d2d965f493"
+checksum = "6851dcd54a7271dd9013195fdccbdaba70c8e71014364e396d4b938d0e67f324"
 dependencies = [
  "cbor4ii",
  "ipld-core",
