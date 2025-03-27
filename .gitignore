@@ -1,2 +1,8 @@
 js/node_modules
 rust/target
+
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
