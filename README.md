@@ -65,6 +65,13 @@ Fixtures are tested against the [libipld](https://github.com/ipld/libipld) stack
 * DAG-CBOR: [libipld-cbor](https://crates.io/crates/libipld-cbor)
 * DAG-JSON: [libipld-json](https://crates.io/crates/libipld-json)
 
+### Python
+
+Fixtures are tested against the [ipld-dag-pb](https://github.com/storacha/py-ipld-dag-pb)
+library:
+
+* DAG-PB: [ipld-dag-pb](https://pypi.org/project/ipld-dag-pb/)
+
 ## Running tests
 
 ### JavaScript
@@ -102,6 +109,18 @@ Or in the [rust](./rust/) directory, run:
 
 ```
 cargo test -- --nocapture
+```
+
+## Python
+
+```bash
+make testpy
+```
+
+Or in the [python](./python/) directory, run:
+
+```bash
+pytest
 ```
 
 ## Generating testmark output for ipld.io
