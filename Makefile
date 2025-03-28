@@ -1,8 +1,9 @@
 JS_DIR=js
 GO_DIR=go
 RUST_DIR=rust
+PYTHON_DIR=python
 
-.PHONY: all testjs testgo testrust _build car build clean
+.PHONY: all testjs testgo testrust testpy _build car build clean
 
 all: testjs testgo testrust
 
@@ -17,6 +18,9 @@ testgo:
 
 testrust:
 	cd $(RUST_DIR) && cargo test -- --nocapture
+
+testpy:
+	cd $(PYTHON_DIR) && pytest
 
 _build:
 	cd $(JS_DIR) && npm run build
