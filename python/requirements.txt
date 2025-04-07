@@ -8,6 +8,8 @@ bases==0.3.0
     # via multiformats
 iniconfig==2.1.0
     # via pytest
+ipld-car==0.0.1
+    # via py-ipld-dag-pb-test (pyproject.toml)
 ipld-dag-pb==0.0.1
     # via py-ipld-dag-pb-test (pyproject.toml)
 multiformats==0.3.1.post4
