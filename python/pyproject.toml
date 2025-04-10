@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "py-ipld-dag-pb-test"
+name = "python"
 version = "0.0.1"
 requires-python = ">=3.10"
 classifiers = [
@@ -16,3 +16,5 @@ dependencies = [
     "pytest",
     "ipld-car",
 ]
+[tool.hatch.build.targets.wheel]
+packages = ["python"]

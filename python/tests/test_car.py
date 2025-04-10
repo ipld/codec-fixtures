@@ -40,20 +40,28 @@ def test_car_decode(fixture_block, car_fixture_data):
 def test_car_encode(car_fixture_data):
     # encoded blocks from the fixtures dir into CAR
     fixture_blocks = load_all_fixtures()
-    encoded_car = ipld_car.encode(roots=[], blocks=fixture_blocks)
+    encoded_fixture_blocks_car = ipld_car.encode(roots=[], blocks=fixture_blocks)
 
-    decoded_car_fixture_blocks_root, decoded_car_fixture_blocks = ipld_car.decode(encoded_car)
-    decoded_car_fixture_file_root, decoded_car_fixture_file_data = ipld_car.decode(car_fixture_data)
+    decoded_car_fixture_blocks_root, decoded_car_fixture_blocks = ipld_car.decode(
+        encoded_fixture_blocks_car
+    )
+    decoded_car_fixture_file_root, decoded_car_fixture_file = ipld_car.decode(
+        car_fixture_data
+    )
 
     assert decoded_car_fixture_blocks_root == decoded_car_fixture_file_root
 
-    # verify same blocks are present in both
-    assert len(decoded_car_fixture_blocks) == len(decoded_car_fixture_file_data)
-    assert set(block[0] for block in decoded_car_fixture_blocks) == set(block[0] for block in decoded_car_fixture_file_data)
+    # verify same blocks are present in encoded-then-decoded-fixture-blocks
+    # and decoded car fixture file
+    assert len(decoded_car_fixture_blocks) == len(decoded_car_fixture_file)
+    assert (
+        set(block[0] for block in decoded_car_fixture_blocks) ==
+        set(block[0] for block in decoded_car_fixture_file)
+    )
 
     # verify content by CID
     encoded_blocks_dict = {block[0]: block[1] for block in decoded_car_fixture_blocks}
-    fixture_data_dict = {block[0]: block[1] for block in decoded_car_fixture_file_data}
+    fixture_data_dict = {block[0]: block[1] for block in decoded_car_fixture_file}
 
     for cid, data in fixture_data_dict.items():
         assert cid in encoded_blocks_dict
