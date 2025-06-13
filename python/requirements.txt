@@ -22,7 +22,7 @@ pluggy==1.6.0
     # via pytest
 pytest==8.4.0
     # via py-ipld-dag-pb-test (pyproject.toml)
-typing-extensions==4.13.2
+typing-extensions==4.14.0
     # via
     #   bases
     #   multiformats
