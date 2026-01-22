@@ -16,7 +16,7 @@ multiformats==0.3.1.post4
     #   py-ipld-dag-pb-test (pyproject.toml)
 multiformats-config==0.3.1
     # via multiformats
-packaging==25.0
+packaging==26.0
     # via pytest
 pluggy==1.6.0
     # via pytest
