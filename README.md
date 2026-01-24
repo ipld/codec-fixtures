@@ -68,9 +68,10 @@ Fixtures are tested against the [libipld](https://github.com/ipld/libipld) stack
 ### Python
 
 Fixtures are tested against the [ipld-dag-pb](https://github.com/storacha/py-ipld-dag-pb)
-library:
+and [ipld-car](https://github.com/storacha/py-ipld-car) library:
 
 * DAG-PB: [ipld-dag-pb](https://pypi.org/project/ipld-dag-pb/)
+* CAR: [ipld-car](https://pypi.org/project/ipld-car)
 
 ## Running tests
 
