@@ -1,0 +1,5 @@
+[patch.crates-io]
+ipld-core = { git = "https://github.com/ipld/rust-ipld-core" }
+ipld-dagpb = { git = "https://github.com/ipld/rust-ipld-dagpb" }
+serde_ipld_dagcbor = { git = "https://github.com/ipld/serde_ipld_dagcbor" }
+serde_ipld_dagjson = { git = "https://github.com/ipld/serde_ipld_dagjson" }
