@@ -74,7 +74,7 @@ jobs:
           - nightly
         manifest:
           - Cargo.toml
-          - Cargo_latest_git.toml
+          - latest-git-patched.toml
     defaults:
       run:
         working-directory: rust
@@ -84,10 +84,10 @@ jobs:
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.rust-version }}
-      # The manifest file needs to be named `Cargo.toml`, hence rename if needed.
+      # Patch the manifest for the latest version on GitHub
       - name: Use specified manifest file ${{ matrix.manifest }}
         if: matrix.manifest != 'Cargo.toml'
-        run: mv ${{ matrix.manifest }} Cargo.toml
+        run: cat ${{ matrix.manifest }} >> Cargo.toml
       - name: Rust information with ${{ matrix.manifest }}
         run: |
           cargo --version
