@@ -344,16 +344,16 @@ dependencies = [
 
 [[package]]
 name = "multihash-codetable"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "81af9fca2d5a2da9ecfce795589b15c271d0a119059670e56e6cc9f8bcad8cd8"
+checksum = "facfe64780489b29aae20d32d0245219f4a8167f91193f7061589f5dae9ba307"
 dependencies = [
  "blake2b_simd",
  "blake2s_simd",
  "blake3",
- "core2",
  "digest",
  "multihash-derive",
+ "no_std_io2",
  "ripemd",
  "sha1",
  "sha2",
@@ -362,13 +362,13 @@ dependencies = [
 
 [[package]]
 name = "multihash-derive"
-version = "0.9.1"
+version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f1b7edab35d920890b88643a765fc9bd295cf0201f4154dda231bef9b8404eb"
+checksum = "0576e09c49157d1910e522e595d2b32749b029dd0bc10ff6967d588490c30348"
 dependencies = [
- "core2",
  "multihash",
  "multihash-derive-impl",
+ "no_std_io2",
 ]
 
 [[package]]
@@ -382,6 +382,15 @@ dependencies = [
  "quote",
  "syn",
  "synstructure",
+]
+
+[[package]]
+name = "no_std_io2"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8a3564ce7035b1e4778d8cb6cacebb5d766b5e8fe5a75b9e441e33fb61a872c6"
+dependencies = [
+ "memchr",
 ]
 
 [[package]]
