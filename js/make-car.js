@@ -10,11 +10,18 @@ const outStream = createWriteStream(outFile)
 const { writer, out } = await CarWriter.create([])
 const pipe = pipeline(out, outStream)
 
+const blocks = []
 for (const { name, url } of fixtureDirectories()) {
   const data = await loadFixture(url)
   for (const { cid, bytes } of Object.values(data)) {
-    await writer.put({ cid: CID.parse(cid), bytes })
+    blocks.push({ cid, bytes })
   }
+}
+
+blocks.sort((a, b) => a.cid < b.cid ? -1 : a.cid > b.cid ? 1 : 0)
+
+for (const { cid, bytes } of blocks) {
+  await writer.put({ cid: CID.parse(cid), bytes })
 }
 
 await writer.close()
