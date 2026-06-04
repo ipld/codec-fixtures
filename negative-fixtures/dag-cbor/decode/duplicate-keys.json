@@ -2,6 +2,6 @@
   {
     "name": "duplicate map keys",
     "hex": "a3636261720363666f6f0163666f6f02",
-    "error": "repeat map key \"foo\""
+    "error": "map key \"foo\""
   }
 ]
