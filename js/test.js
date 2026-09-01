@@ -31,7 +31,7 @@ describe('Codec fixtures', () => {
   }
 })
 
-describe.only('Codec negative fixtures', () => {
+describe('Codec negative fixtures', () => {
   for (const codec of negativeFixtureCodecs()) {
     describe(codec, () => {
       const { encode, decode } = codecs[codec].codec
