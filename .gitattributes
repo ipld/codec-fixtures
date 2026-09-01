@@ -1,0 +1,6 @@
+# Encoded IPLD blocks and CARs are byte-exact payloads: never diff, merge,
+# or normalize line endings, or the bytes stop matching their CIDs.
+*.dag-pb binary
+*.dag-cbor binary
+*.dag-json binary
+*.car binary
