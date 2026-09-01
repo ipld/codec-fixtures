@@ -144,3 +144,48 @@ fn negative_fixtures() {
         }
     }
 }
+
+/// Non-canonical fixtures: blocks that decode successfully but are not in
+/// canonical form, so they can never round-trip byte-for-byte. The contract:
+/// decoding must succeed, the decoded value must equal the value decoded from
+/// the canonical bytes, and canonical re-encoding must produce the canonical
+/// CID.
+///
+/// TODO: once codec implementations expose an opt-in encoder for alternate
+/// forms (e.g. the dag-pb Data-first field order proposed by IPIP-550,
+/// https://github.com/ipfs/specs/pull/550), promote these to full round-trip
+/// fixtures with a per-fixture encode hint.
+#[test]
+fn noncanonical_fixtures() {
+    for codec_dir in utils::fixture_directories("noncanonical-fixtures") {
+        let codec_name = codec_dir
+            .file_name()
+            .to_str()
+            .expect("Codec names are valid UTF-8")
+            .to_string();
+        let codec = IpldCodec::new(&codec_name);
+
+        for fixture in utils::load_noncanonical_fixtures(codec_dir.path()) {
+            println!(
+                "Testing noncanonical decode fixture for {}: {}",
+                codec_name, fixture.name
+            );
+            let decoded = codec.decode(&fixture.bytes).expect("Decoding must work");
+            let canonical_decoded = codec
+                .decode(&fixture.canonical_bytes)
+                .expect("Decoding canonical bytes must work");
+            assert_eq!(
+                decoded, canonical_decoded,
+                "noncanonical and canonical bytes decode to the same value"
+            );
+
+            let data = codec.encode(&decoded).expect("Encoding must work");
+            let digest = Code::Sha2_256.digest(&data);
+            let cid = Cid::new_v1(u64::from(IpldCodec::new(&codec_name)), digest);
+            assert_eq!(
+                cid, fixture.canonical_cid,
+                "canonical re-encode produces the canonical CID"
+            );
+        }
+    }
+}

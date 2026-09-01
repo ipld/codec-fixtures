@@ -200,3 +200,79 @@ func testNegativeFixtureDecode(codecName string, fixture negativeFixtureDecode) 
 		}
 	}
 }
+
+// TestNoncanonicalFixtures verifies blocks that decode successfully but are
+// not in canonical form, so they can never round-trip byte-for-byte: decoding
+// must succeed, the decoded node must equal the node decoded from the
+// canonical bytes, and canonical re-encoding must produce the canonical CID.
+//
+// TODO: once codec implementations expose an opt-in encoder for alternate
+// forms (e.g. the dag-pb Data-first field order proposed by IPIP-550,
+// https://github.com/ipfs/specs/pull/550), promote these to full round-trip
+// fixtures with a per-fixture encode hint.
+func TestNoncanonicalFixtures(t *testing.T) {
+	dirs, err := os.ReadDir("../noncanonical-fixtures/")
+	if err != nil {
+		t.Fatalf("failed to open noncanonical fixtures dir: %v", err)
+	}
+	for _, dir := range dirs {
+		if !dir.IsDir() {
+			continue
+		}
+		codecName := codecName(dir.Name())
+		t.Run(string(codecName), func(t *testing.T) {
+			files, err := os.ReadDir(filepath.Join("../noncanonical-fixtures/", string(codecName), "decode"))
+			if err != nil {
+				if errors.Is(err, os.ErrNotExist) {
+					return
+				}
+				t.Fatalf("failed to open noncanonical fixtures dir: %v", err)
+			}
+			for _, file := range files {
+				fixtureData, err := os.ReadFile(filepath.Join("../noncanonical-fixtures/", string(codecName), "decode", file.Name()))
+				if err != nil {
+					t.Fatalf("failed to read noncanonical fixture file: %v", err)
+				}
+				var fixtures []noncanonicalFixtureDecode
+				if err := json.Unmarshal(fixtureData, &fixtures); err != nil {
+					t.Fatalf("failed to parse noncanonical fixture file: %v", err)
+				}
+				for _, fixture := range fixtures {
+					t.Run(fixture.Name, testNoncanonicalFixtureDecode(codecName, fixture))
+				}
+			}
+		})
+	}
+}
+
+func testNoncanonicalFixtureDecode(codecName codecName, fixture noncanonicalFixtureDecode) func(t *testing.T) {
+	return func(t *testing.T) {
+		byts, err := hex.DecodeString(fixture.Hex)
+		if err != nil {
+			t.Fatalf("failed to parse fixture hex: %v", err)
+		}
+		canonicalByts, err := hex.DecodeString(fixture.CanonicalHex)
+		if err != nil {
+			t.Fatalf("failed to parse fixture canonicalHex: %v", err)
+		}
+		expectedCid, err := cid.Decode(fixture.CanonicalCid)
+		if err != nil {
+			t.Fatalf("failed to parse fixture canonicalCid: %v", err)
+		}
+
+		node, err := decodeBytes(codecName, byts)
+		if err != nil {
+			t.Fatalf("failed to decode noncanonical block: %v", err)
+		}
+		canonicalNode, err := decodeBytes(codecName, canonicalByts)
+		if err != nil {
+			t.Fatalf("failed to decode canonical block: %v", err)
+		}
+		// Logical equality is verified through canonical form: both decodes
+		// must re-encode to the same canonical CID. ipld.DeepEqual is not
+		// used here because the two wire forms decode to maps whose entry
+		// order differs, which DeepEqual treats as unequal.
+		verifyCid(t, "reencode(noncanonical)", node, codecs[codecName], expectedCid)
+		verifyCid(t, "reencode(canonical)", canonicalNode, codecs[codecName], expectedCid)
+	}
+}

@@ -40,6 +40,18 @@ Negative fixtures for an encode phase involve defining a data model form that sh
 
 Negative fixtures for a decode phase involve loading a block's bytes from a hex form from the fixture data and passing those bytes through a `Decode()` for that codec and inspecting the error. Error messages may or may not be matched in some way, depending on the complexity of the implementation—it is more important that a failure occur than the error is exact.
 
+## Non-canonical Fixtures
+
+The [noncanonical-fixtures](./noncanonical-fixtures/) directory contains blocks that decode successfully but are not in the canonical form for their codec, so they can never round-trip byte-for-byte through the positive fixture flow above. Like negative fixtures, they are grouped per codec as `noncanonical-fixtures/<codec-name>/decode/*.json`. Each entry has a `name`, the `hex` of the non-canonical block, the `canonicalHex` of the same logical node in canonical form, and the `canonicalCid` of that canonical block.
+
+Codec implementations are expected to:
+
+1. Decode the non-canonical block successfully
+2. Confirm it decodes to the same logical node as the canonical bytes
+3. Re-encode the node canonically and compare the resulting CID to `canonicalCid`
+
+The current cases cover the opt-in dag-pb `Data`-first field order proposed by [IPIP-550](https://github.com/ipfs/specs/pull/550) for the `unixfs-v1-2026` UnixFS profile: decoders accept both field orders, while `Links`-first remains the canonical encode order. The related negative decode fixture "data between links" stays invalid: opt-in ordering does not loosen the rule against interleaved fields.
+
 ## Implementations & Codecs
 
 ### Go
