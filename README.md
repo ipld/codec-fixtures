@@ -50,7 +50,7 @@ Codec implementations are expected to:
 2. Confirm it decodes to the same logical node as the canonical bytes
 3. Re-encode the node canonically and compare the resulting CID to `canonicalCid`
 
-The current cases cover the opt-in dag-pb `Data`-first field order proposed by [IPIP-550](https://github.com/ipfs/specs/pull/550) for the `unixfs-v1-2026` UnixFS profile: decoders accept both field orders, while `Links`-first remains the canonical encode order. The related negative decode fixture "data between links" stays invalid: opt-in ordering does not loosen the rule against interleaved fields.
+The current cases cover the opt-in dag-pb `Data`-first field order proposed by [IPIP-550](https://github.com/ipfs/specs/pull/550): decoders accept both field orders, while `Links`-first remains the canonical encode order. The related negative decode fixture "data between links" stays invalid: opt-in ordering does not loosen the rule against interleaved fields.
 
 ## Implementations & Codecs
 
