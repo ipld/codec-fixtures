@@ -3,6 +3,7 @@ import path from 'path'
 
 export const fixturesDir = new URL('../fixtures/', import.meta.url)
 export const negativeFixturesDir = new URL('../negative-fixtures/', import.meta.url)
+export const noncanonicalFixturesDir = new URL('../noncanonical-fixtures/', import.meta.url)
 
 export async function loadFixture (dir) {
   const data = {}
@@ -70,4 +71,16 @@ export function * negativeFixturesEncode (codec) {
 
 export function * negativeFixturesDecode (codec) {
   yield * negativeFixtures('decode', codec)
+}
+
+export function * noncanonicalFixtureCodecs () {
+  for (const { name } of iterate('dir', noncanonicalFixturesDir)) {
+    yield name
+  }
+}
+
+export function * noncanonicalFixturesDecode (codec) {
+  for (const { url } of iterate('file', noncanonicalFixturesDir, codec, 'decode')) {
+    yield JSON.parse(fs.readFileSync(url, 'utf8'))
+  }
 }
