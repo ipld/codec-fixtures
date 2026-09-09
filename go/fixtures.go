@@ -126,3 +126,26 @@ type negativeFixtureDecode struct {
 	Hex   string `json:"hex"`
 	Error string `json:"error"`
 }
+
+type noncanonicalFixtureDecode struct {
+	Name         string `json:"name"`
+	Hex          string `json:"hex"`
+	CanonicalHex string `json:"canonicalHex"`
+	CanonicalCid string `json:"canonicalCid"`
+}
+
+func decodeBytes(codecName codecName, byts []byte) (ipld.Node, error) {
+	lp, ok := codecs[codecName]
+	if !ok {
+		return nil, fmt.Errorf("unknown codec '%v'", codecName)
+	}
+	decoder, err := linkSystem.DecoderChooser(lp.BuildLink(make([]byte, 32)))
+	if err != nil {
+		return nil, err
+	}
+	na := basicnode.Prototype.Any.NewBuilder()
+	if err := decoder(na, bytes.NewReader(byts)); err != nil {
+		return nil, err
+	}
+	return na.Build(), nil
+}

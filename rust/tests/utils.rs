@@ -147,3 +147,67 @@ pub fn load_negative_fixtures(mut dir: PathBuf, en_or_decode: &str) -> Vec<Negat
         Vec::new()
     }
 }
+
+/// Contents of a single non-canonical fixture.
+#[derive(Debug)]
+pub struct NoncanonicalFixture {
+    pub name: String,
+    pub bytes: Vec<u8>,
+    pub canonical_bytes: Vec<u8>,
+    pub canonical_cid: Cid,
+}
+
+/// Returns all non-canonical decode fixtures from the given codec directory.
+pub fn load_noncanonical_fixtures(mut dir: PathBuf) -> Vec<NoncanonicalFixture> {
+    dir.push("decode");
+    if let Ok(read_dir) = fs::read_dir(&dir) {
+        read_dir
+            .filter_map(|file| {
+                // Filter out invalid files.
+                let file = file.ok()?;
+
+                let bytes = fs::read(file.path()).expect("File must be able to be read");
+                // Use DAG-JSON for parsing, so we don't need an extra JSON parser.
+                let ipld: Ipld = serde_ipld_dagjson::from_slice(&bytes).expect("It's valid JSON");
+
+                if let Ipld::List(list) = ipld {
+                    let fixtures: Vec<_> = list
+                        .iter()
+                        .map(|fixture| {
+                            let name = match fixture.get("name") {
+                                Ok(Some(Ipld::String(name))) => name.to_string(),
+                                _ => panic!("Noncanonical fixture has no name"),
+                            };
+                            let hex_field = |key: &str| -> Vec<u8> {
+                                if let Ok(Some(Ipld::String(data))) = fixture.get(key) {
+                                    hex::decode(data).unwrap()
+                                } else {
+                                    panic!("Noncanonical fixture is missing '{}'", key)
+                                }
+                            };
+                            let canonical_cid =
+                                if let Ok(Some(Ipld::String(data))) = fixture.get("canonicalCid") {
+                                    Cid::try_from(data.as_str())
+                                        .expect("canonicalCid must be a valid CID")
+                                } else {
+                                    panic!("Noncanonical fixture is missing 'canonicalCid'")
+                                };
+                            NoncanonicalFixture {
+                                name,
+                                bytes: hex_field("hex"),
+                                canonical_bytes: hex_field("canonicalHex"),
+                                canonical_cid,
+                            }
+                        })
+                        .collect();
+                    Some(fixtures)
+                } else {
+                    None
+                }
+            })
+            .flatten()
+            .collect()
+    } else {
+        Vec::new()
+    }
+}

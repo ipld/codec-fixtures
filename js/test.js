@@ -9,6 +9,8 @@ import {
   negativeFixtureCodecs,
   negativeFixturesEncode,
   negativeFixturesDecode,
+  noncanonicalFixtureCodecs,
+  noncanonicalFixturesDecode,
   loadFixture
 } from './util.js'
 import { bytes } from 'multiformats'
@@ -65,6 +67,35 @@ describe('Codec negative fixtures', () => {
             } catch (e) {
               assert.include(e.message, error)
             }
+          })
+        }
+      }
+    })
+  }
+})
+
+// Non-canonical fixtures: blocks that decode successfully but are not in
+// canonical form, so they can never round-trip byte-for-byte. The contract:
+// decoding must succeed, the decoded value must equal the value decoded from
+// the canonical bytes, and canonical re-encoding must produce the canonical
+// CID.
+//
+// TODO: once codec implementations expose an opt-in encoder for alternate
+// forms (e.g. the dag-pb Data-first field order proposed by IPIP-550,
+// https://github.com/ipfs/specs/pull/550), promote these to full round-trip
+// fixtures with a per-fixture encode hint.
+describe('Codec noncanonical fixtures', () => {
+  for (const codec of noncanonicalFixtureCodecs()) {
+    describe(codec, () => {
+      const { decode } = codecs[codec].codec
+      for (const fixtures of noncanonicalFixturesDecode(codec)) {
+        for (const { name, hex, canonicalHex, canonicalCid } of fixtures) {
+          it(name, async () => {
+            const value = decode(bytes.fromHex(hex))
+            const canonicalValue = decode(bytes.fromHex(canonicalHex))
+            assert.deepEqual(value, canonicalValue, 'noncanonical and canonical bytes decode to the same value')
+            const block = await Block.encode({ value, codec: codecs[codec].codec, hasher: sha256 })
+            assert.equal(block.cid.toString(), canonicalCid, 'canonical re-encode produces the canonical CID')
           })
         }
       }
