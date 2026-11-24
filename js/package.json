@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/ipld/codec-fixtures#readme",
   "dependencies": {
-    "@ipld/car": "^5.2.4",
+    "@ipld/car": "^6.1.0",
     "@ipld/dag-cbor": "^11.0.0",
     "@ipld/dag-json": "^12.0.0",
     "@ipld/dag-pb": "^4.0.7",
